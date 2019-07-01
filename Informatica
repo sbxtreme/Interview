@@ -1,0 +1,165 @@
+Types of schemas:
+-------------------
+1) star schema 
+2) snowflake schema
+
+in star schema we have a fact table which is surrounded by the dimension tables and all the dimension tables 
+are dependent on fact tables where as in snowflake schema which is similar to star schema but the dimension tables
+which surrounds the fact table are further linked to other dimension tables.
+
+star schema are mostly used in datamarts where as snowflask schemas are used in datawarehousing.
+
+Datamarts are the subsets of Datawarehousing like a table which containts employee details of all employees
+which works in tech , admin , finance but if we collect only the employees and its tables which work only
+in tech then the subset is called as datamart.
+
+To get data from star schema less joins will be used where as from snowflake schemas high number of joins  are used.
+
+In snowflake schema we have more then 1 dimension tables like position and position detail where as in star schema we have 
+only 1 dimension table for each dimension like holding,transaction,valuation etc.
+
+** Fact tables are always de-normalized where as Dimension tables should be normalized to reduce the problem
+of data redendency. The problem happens when we insert , delete or update the data which is redundent.
+Tables should be normalized.
+
+
+Surrogate key:
+--------------
+surrogate key is a unique key which can be declared as a primary key to identify the records. Mostly these keys are incremented integers or auto incremented columns in database.
+
+
+Normalization:
+--------------
+Normalization is a process of removing the redundency in the data in a table. By making a table as normalized we can reduce data redundency and can solve the problem of insert , delete or update which happens in denormalized table.
+
+Active transformation & Passive transformation:
+-----------------------------------------------
+The transformation in which number of input rows is not equals to number of output rows is called as active transformation.
+ex: filter transformation
+
+The transformation in which number of input rows is equals to number of output rows is called as passive transformation.
+ex: expression transformation
+
+Sorter is an active transformation because the number of input rows <> number of output rows.
+There is a property i.e distinct in sorter transformation which fluctuates the input and output row counts.
+
+SCD1,SCD2 
+
+
+
+Performance of Joiner transformation:
+-------------------------------------
+Performance can be increased by making the table as master which consists of less rows and detail which consists of more rows.
+
+Instead of using joiner transformation if we can join tables in SQ-override then it will increase performance.
+
+
+Update stretegy in informatica:
+-------------------------------
+It is an active transformation which tags the behaviour of records before going to the target.
+The integration service decides what needs to be done for the records based on the below keyword.
+There are 4 keywords used:
+DD_INSERT
+DD_UPDATE
+DD_DELETE
+DD_REJECT
+
+
+Parallel processing in informatica:
+------------------------------------
+It can be done using partitioning of sessions in informatica.
+or 
+It can be done using database partitioning.
+
+difference between stop and abort commands in workflow monitor:
+-- stop commands stops reading the data from sources but data processing and target insert continues
+-- abort command consists of timeout period of 60 seconds and after that it terminates the session
+
+difference betweeen router and filter transformation:
+router
+------
+it is a single input and multiple output transformation based on the conditions in the group.
+if no condition is met in the group then the data is routed to default group.
+it acts as a when statement in database
+
+filter
+------
+it is a transformation which consists of filter condition and the data which does not met the condition
+is dropped and the data which met filter condition is passes further.There is only one filter condition
+which can be added in filter transformation.It works as a where clause in sql.
+
+Lookup transformation:
+-----------------------
+It is a transformation using which we can lookup database,files etc.
+There are 2 types of lookup transformation :
+1) connected  : this lookup is connected in the dataflow pipeline. It can return multiple columns 
+2) un-connected : this lookup is called in expression transformation. It can return single column.
+
+Cache in Lookup:
+----------------
+1) Static cache : ones a cache is created the integration service always query the cache instead of lookup table.We can't insert or update the cache.
+2) Dynamic cache : As soon as records are inserted or updated in the lookup table the cache memory is refreshed.Dynamic cache is syncronized with the lookup table.
+3) Persistent cache : If we want to save the cache of lookup even after the session terminates then a caching file is created and the cache will be used in the next session , hence retains the cache which is called as persistent cache.
+4) Shared cache : if we have multiple lookup transformation then memory is shared between lookups for creating cache which is called as shared cache. as soon as lookup work is done the memory is released and assigned to other lookup transformation.
+
+	-- named
+	-- unnamed
+5) Recache from source
+
+Improve the performance of lookup transformation:
+1) avoid order by in lookup source.
+2) create index on columns used to fetch data in lookup transformation
+
+Difference between lookup and joiner transformation:
+----------------------------------------------------
+1) In join we can only use = to join two tables where as in lookup we can use =>,=<,=,!= operators while giving condition.
+2) In join we cannot use cache where as in lookup we can use cache.
+3) In join we cannot use sqloveride where as in lookup we can use sqloverride
+4) In join we can perform all type of joins where as in lookup we can only perform left join.
+
+
+Worklets: If we create a workflow which is reuseable then the workflow is called as worklet. It is similar to maplets.
+
+Bulk load and normal load:
+--------------------------
+When we want to insert hugh amount of data then we use bulk load and when the data volume is not high then 
+we use normal load. In normal load database logs are created for each inserted record where as in bulk load
+no database logs are created.
+
+Senario:
+--------
+1) if we want to load 5 files in a single target then we can use indirect file loading method.
+All the files will be loaded in the target . We need to set property as indirect file load and give the path where all the files are kept and the list of files. This will load all the files present in the path to the target.
+
+2) If we want to populate the 1st 3rd 5th and 2nd 4th 6th records in two different tables then the approach will be as below.
+	source ---> expression ----> router ( in which logic is to seperate odds and evens) ----> odds and evens in diff. table
+					  ^
+sequence generator ---|
+
+3) To load first and last records in table.
+For this source is connected to rank transformation and sequence is connected to rank transformation.
+Using rank transformation we can get top 1 rank and bottom 1 rank and load in different tables.
+
+4)To load unique records in 1 table and duplicate records in other table we use the below flow:
+source is connected to aggregator which will group the records based on columns and add count variable to count the records.Then pass the data into router and make 2 groups. if the count >1 then load in one table and count=1 then load
+in another table.
+
+5) Load data in target with everyrow as sum of previous row:
+To do this we can use cum(column) in expression and load in target.
+
+
+Joiner transformation:
+----------------------
+There are 4 types of joins in joiner transformation:
+1) Normal join which is equi join .. only the matched records from both the table will be fetched.
+2) Master join - it is like left join in which matched records from master table and all records from detail table will be fetched.
+3) Detail join - it is like right join in which all the matched records from detail table and all the records from master table will be fetched.
+4) Full join - all the records from master and detail will be fetched.
+
+Below is the position of tables when we discuss about the above type of joins.
+MASTER TABLE -- DETAIL TABLE
+
+Unconnected lookup transformation is more prefered than connected lookup because unconnected lookup will be called
+only when a certain condition is met in an expression and thus caching of data will be controlled where as 
+connected lookup will be called always because it is connected to pipeline and hence caching data will be more which 
+might slow down the process.
