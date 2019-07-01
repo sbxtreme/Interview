@@ -1,3 +1,13 @@
+Slow changing dimensions- Dimensions which change slowly over the time rather than changing daily is called 
+as slow changing dimension.There are 4 types of SCD:
+1) SCD1 - in this we update the data in table in case any change comes in a data. We don't maintain history.
+2) SCD2 - in this we keep history of change by insert a new record as active record and deactivated the old record.
+This maintains history and current data both in the table and for OLAP reporting purpose we can take history data
+from the same table and for OLTP processing the same table can be used with the current data.
+3) SCD3 - in this we have columns for capturing the old value and new values of the data . We insert newly modified data
+with value in new columns and old column as null and for old data values are in old columns and new column is null.
+4) SCD6 - the combination of SCD1,2,3 forms SCD6 .
+
 Types of schemas:
 -------------------
 1) star schema 
@@ -31,6 +41,7 @@ surrogate key is a unique key which can be declared as a primary key to identify
 Normalization:
 --------------
 Normalization is a process of removing the redundency in the data in a table. By making a table as normalized we can reduce data redundency and can solve the problem of insert , delete or update which happens in denormalized table.
+A big table containting different types of data can be divided into multiple tables based on functional dependencies.
 
 Active transformation & Passive transformation:
 -----------------------------------------------
