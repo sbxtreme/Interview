@@ -1,0 +1,315 @@
+Linux:
+>> what is Linux
+>> Opensource and Licenses
+>> Linux distributions
+>> Root in Linux
+
+>>Sudo means Super user do will have root access
+
+# Command to know commads ( called as man pages )
+
+man <name of the command>
+ex: man grep
+ 
+#add a user:
+sudo -s # to go in sudo mode i.e work as a admin aur root user
+useradd <username> -p <password>
+
+# to change password
+passwd <username>
+
+# to list all the users
+cut -d: -f1 /etc/passwd
+
+# to delete user 
+sudo -s 
+userdel <username>
+
+# color codings in linux system
+files will have different color codings
+directories will have different color codings
+directories with full access will have different color codings
+
+# files related commands:
+## to create a file :  touch <filename>
+## to give full access to file : chmod +x <filename>
+## to revoke access from file : chmod -x <filename>
+## to list all the files : ls -lrt
+## here
+-l(to list all files and directories)
+r( to show results based on restrictions) 
+>> ls -lr (full permission files first)
+t( to show results based on time ) 
+>> ls -lt ( latest files first )
+>> ls -R # to show all the files inside all the directories present on a location where we executed this command
+
+to view the hidden files
+ls -al ( .profile is a hidden file which holds configurations)
+
+so best is ls -lrt which means list all files then show using restrictions
+and then sort by time. Latest will be shown at the bottom.
+
+# to see the contents of file without opening 
+cat <filename>
+
+# to know the number of lines in the file
+wc -l 
+similarly there are many options which can be used with wc . To know use wc --help
+
+# to write in a file without opening a file
+cat > <filename>
+write the contents and then cntrl+ d to save
+
+# to write more than 1 commands in a single line
+touch test.txt | chmod +x test.txt
+here 2 commands are executed in a single line
+
+# to delete a file
+rm <filename>
+rm -f
+
+# to delete a file with conformation
+rm -i <filename>
+
+# to create a directory
+mkdir <directoryname>
+
+# to remove a directory
+rmdir <directoryname>
+
+# to know the disk space on a server
+df -h
+df -avail
+
+
+# Use of dev/null
+
+dev is a location where device files are kept which are used for communicating to device hardware.
+dev/null is a kind of black hole of linux in which we can redirect o/p of any command and which can be 
+discarded.
+
+touch $file 2> /dev/null
+if [ $? != 0 ]; then
+    echo File creation failed ---- (A)
+    exit 1
+else
+
+In the above senario i want to check whether i am able to create a file using touch command
+and if i failed to create due to some permission issue , the command will throw an error "permission denied"
+but i don't want to throw this error, instead i'll check the return code using $? which will tell
+1 if any error occurs and thus i can display message written in line (a).
+
+Basically /dev/null is a location where we can dump any stdoutput.
+
+# view the content in a readonly mode
+
+view < filename>
+
+# to delete a directory if its empty
+rmdir <directory_name>
+
+# to delete a directory if its not empty
+rm -r <directory> # here r is recursive i.e it will delete the content of the directory and then it will delete 
+a directory.
+
+# to sort the files in ascending to decending order of there size
+ls -xl
+
+# file permissions in linux
+
+-rw-rw-rw- 1 sbxtreme sbxtreme    0 Feb 26 20:50 ab.txt
+
+drwxrwxrwx 0 sbxtreme sbxtreme 4096 Feb 26 20:57 test_dir
+
+The permisions are broken into 4 sections.
+first character = - (file) , d (directory) , l (link)
+rwx = read write execute permission for the owner of file
+rwx = read write execute permission for member of groups owning the file.
+rwx = read write execute permission for other users
+---------------------------------------------------
+total =  10 characters to decide file permission
+
+# to join the contents of 2 file and write in 3rd file
+cat c1.txt c2.txt > c3.txt
+
+# to append in the same file
+cat >> c1.txt
+ 
+# copy operations
+cp <sourcefile> <targetpath>
+cp -i <sourcefile> <targetpath> # here -i asks user before copy (options-Y or N)
+cp -r <sourcedir> <targetdir> # here -r copies complete sourcedir with its contents to targetdir
+
+# create duplicate file
+cp <file1> <file2>
+
+# to remove files and directories both
+rm -rf *
+
+# to rename a file 
+mv <oldname> <newname>
+
+# to move files from 1 path to another
+mv filename /path/path1
+
+# to move a file from home (a583853) to user (eagle) directory.
+sudo mv file1 /path/path1
+
+# to create alias 
+alias cls=clear
+
+# to display big file in pages
+pg filename
+or 
+more filename
+
+# to split a bigger file into small files
+split <filename> # this will split big file into equal lines small file
+split -100 filename.txt # this will break filename.txt data into files with 100 lines each
+split -100 filename.txt new_split_file # this is split data into files using naming conv. new_split_file 
+
+# to sort the file
+sort filename.txt
+
+# to find common data between 2 file
+comm -12 file1 file2 # both the files should be sorted.
+
+# to find difference between both the files and write in 3rd file.
+diff file1 file2 > file3
+
+# Use of pipes
+	# command to count num of files in a directory
+	ls -l | wc -l
+
+	# command to get the latest file in a directory
+	ls -ltr | tail -1
+
+	# command to get the oldest file in a directory
+	ls -ltr | head -2
+
+	# to display the n lines of all the files strating with a pattern
+	head -2 file_1* # this will display the first 2 lines of all the files starting with file_1
+
+# cut commands
+	# cut the content of files from 1 position to another
+	cut -c 1-8 filename 
+
+	# to get the name of the latest file whose size remains same
+	ls -ltr | tail -1 | cut -d ' ' -f 10
+
+	# to get the permission of the latest file generated
+	ls -ltr | tail -1 | cut -d ' ' -f 1 # here -d is for delimiter  and -f is for fields seperated by delimiter
+
+		# use case --> i have the below files 
+		-rw-rw-rw- 1 sbxtreme sbxtreme  62 Mar  6 17:27 sys1.txt
+		-rw-rw-rw- 1 sbxtreme sbxtreme  62 Mar  6 17:30 sys2.txt
+		and in each file i have values like 
+		10|11|'system'|'load'|'gross'
+		12|100|'system2'|'loadx'|'gess'
+
+		i need to get the latest file and need to cut the content of that file from field 3 to 5.
+
+		ls -ltr sys* | tail -1 | cat `cut -d ' ' -f 10` | cut -d '|' -f 3-5
+		output:
+
+		'system'|'load'|'gross'
+		'system2'|'loadx'|'gess'
+
+# sorting includes sorting of numbers first , then lower case and then upper case
+# sorting of file contents:	
+sort -n file.txt # sort using asending order
+sort -rn file.txt # sort using decending order
+
+# remove duplicate lines from the file
+sort -u filename.txt # remove duplicate lines
+sort -nu filename.txt # sorted and unique list
+
+# to remove duplicates using uniq command
+# it works always with sorted list
+uniq filename.txt
+
+# display the nth line of a file:
+sed '<nth-line>q;d' file.txt 
+sed '4q;d' filename.txt # this will display 4th line of a file
+
+# head command
+head -1 filename.txt # this will display the 1st line of file
+head -3 filename.txt # this will display the first 3 lines of file
+
+# tail command
+tail -1 filename.txt # this will display the last line of file
+tail -5 filename.txt # this will display the last 5 lines of file
+
+# grep commands :
+	# to find a word in a file or list of files 
+	grep -w hello file* # it will search hello word in all the files following the pattern file*	
+	# to find the letters in a file or list of files
+	grep cont file*
+	# to ignore the uppercase and lowercase while searching 
+	grep -i HeLLO file*
+	# to get the search result with line numbers
+	grep -ni HEllo file* # it will ignore upper/lower case and will search and give result with line numbers
+	# to get the number of occurance of a word
+	grep -ci Hello file*
+
+# find command:
+ find . -iname file_1.txt -type f  # to find a file under same directory
+ find . -iname unix -type d  # to find a directory under same directory
+ find ./ -iname "File*" -type f # to find a file in existing directory ignore case (upper/lower)
+
+# process in unix:
+
+	# command to list running process
+	ps -ef
+ 	# to check the space
+ 	df -h
+ 	# to kill a process
+ 	kill -9 <psid>
+
+here -9 is a signal which is sent to a program to terminate the process
+the list of all the signals which can be fired to a program can be listed using the below command
+
+kill -l
+
+
+
+# bash scripting points:
+
+command to check all the available shell for you system
+cat /etc/shells
+
+Shell is an interpreter which converts unix commands into machine language for executing the commands.
+There are different types of shells present which are:
+1) borne shell ( sh )
+2) borne again shell ( bash )
+3) korn shell ( ksh )
+
+while writing shell script the first line tells the interpreter that which shell the script is using.
+#! /bin/bash  # here this means shebang or hashbang then location of shell i.e bash shell
+
+Variables in linux:
+-- system variables : always capital
+-- user_defined_variable : convention is to write in lowercase
+
+#read command (to read the i/p from the user while script execution we use read)
+read name 
+the username is $name
+
+# the below ways are used for reading username password and array of names from user
+read -p " enter the name" name
+read -sp " enter the pasw" pasw
+echo 
+echo "enter all the names"
+read -a names
+echo " the name is $name"
+echo " the pasw is $pasw"
+echo " the names are ${names[0]} ${names[1]}"
+
+# to clear history of commands
+history -c
+
+# find the file or a directory which is older than 10 days. 
+find -name 'sho*' -mtime +10
+
+# to remove a file or a directory which is older than 20 days.
+find -name "sho*" -mtime +20 -exec rm -rf {} \;
