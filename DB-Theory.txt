@@ -1,0 +1,179 @@
+dml(data manipulation language)
+ddl(data definition language)
+tcl(transaction control language)
+dcl(data control language)
+drl(data retrival language)
+
+dml-insert,update,delete,insert all,merge(insert+update),explain plan
+ddl-create,alter,drop,truncate,purge,flashback,rename
+tcl-commit,rollback,savepoint
+dcl-grant,revoke
+drl-select,select for update(row level locking)
+
+
+RDBMS-data consistency(correct data across database and no one can alter data who is not authenticated)
+      data redundency(avoid duplication of data)
+      data integrety (valid and correct data(ex: sal must be stored in a number field and name in char field))
+ER diagram:
+EMP(entity)---sal,empno,name(relationship)(attributes of entity)
+
+Three tier arch:
+1)external(ui-sql* +  check and validated the user and allow to fire queries)
+2)conceptual(actual execution of queries based on CBO)
+3)internal(database which stores the data)
+
+
+version 5: introduced sql * +
+version 6: hot backup,row level locking,plsql
+version 10: grid computing
+version 11: CBO(cost based optimizer--based on cost(time) and resources(memory) it executes the query)
+	    Automatic tuning for SGA and PGA(system global area,provided global area)
+
+SQL(seequel)- structured query language 
+            - non procedural language as we dont use functions
+            - not an oops language as it does not support inheritance
+Interface level commands like set pagesize,set linesize, quit etc will be executed @ SQL* +
+Other statements like select--,delete,--update etc are executed by Oracle engine.
+
+Types of errors:
+1)sql error- ORA -3542,ORA -10002 etc
+2)plslq error- PLS -8711 etc
+3)*+ error - SP2 -786 etc
+
+
+spaces occupied by the datatypes:
+1)char- 2000bytes
+2)varchar- 2000 bytes(occupy memory for null values)
+3)varchar2- 4000 bytes(doesnot occupy memory for null values)
+4)date - 7 bytes
+5)number - ??
+
+breakage of database(Ascending order):
+1)datablocks(8 kb)
+2)extents
+3)segments
+4)tablespaces
+5)database
+
+Datawarehousing:
+-----------------
+-----------------
+
+Types of schemas:
+-------------------
+1) star schema 
+2) snowflake schema
+
+in star schema we have a fact table which is surrounded by the dimension tables and all the dimension table's 
+primary keys are used as forien keys in fact table , where as in snowflake schema which is similar to star schema but the dimension tables are further linked to other dimension tables example : fund table is linked to shareclass table
+and holding is using fund id so holding is fact and dimension tables are fund and shareclass.
+
+star schema are mostly used in datamarts where as snowflask schemas are used in datawarehousing.
+
+Datamarts are the subsets of Datawarehousing like a table which containts employee details of all employees
+which works in tech , admin , finance but if we collect only the employees and its tables which work only
+in tech then the subset is called as datamart.
+
+To get data from star schema less joins will be used where as from snowflake schemas high number of joins  are used.
+
+
+SCD:
+----
+Slow changing dimensions- Dimensions which change slowly over the time rather than changing daily is called 
+as slow changing dimension.There are 4 types of SCD:
+1) SCD1 - in this we update the data in table in case any change comes in a data. We don't maintain history.
+2) SCD2 - in this we keep history of change by insert a new record as active record and deactivated the old record.
+This maintains history and current data both in the table and for OLAP reporting purpose we can take history data
+from the same table and for OLTP processing the same table can be used with the current data.
+3) SCD3 - in this we have columns for capturing the old value and new values of the data . We insert newly modified data
+with value in new columns and old column as null and for old data values are in old columns and new column is null.
+4) SCD6 - the combination of SCD1,2,3 forms SCD6 .
+
+
+Dimensions:
+-----------
+There are various entities in a data which creates meaning to a data are dimensions and the measurement  data becomes fact.So in order to get the insight out of data we have various entities in data ex:
+for getting details about the sales we have 
+-customer details like id , name , address
+-product details like id , name, type
+-date details like order_date, ship_date,recieved_date
+
+so we have customer dimension, product dimension and date dimension and further there are various attributes in these dimensions.Here sales are the facts and dimensions are the entities which gives meaning to sales.
+Dimension answers the seven questions like who , what, why, how, when, where, howmanys
+
+Dimension table consists of primary keys which are used as foreign keys in fact table.
+
+Fact:
+-----
+A fact is a table containing measure of dimensions.It contains dimension keys (forein keys) and a measure.
+
+
+here fact tables are holding , transaction , valuation and dimension tables are fund , security.
+In fact tables the data is present at the lowest grain like everyday transaction, everyday holding , everyday details of each security etc. where an in dimension table we have reference data which can be linked to fact tables to give meaning to dimension. A list of security is making no significance but the details i.e measure of securities using holding transaction is making sense.
+
+
+
+Confirmed dimensions:
+---------------------
+The dimension tables which are shared by more than 1 fact table is called as confirmed dimensions.
+ex: Fund is shared between holding , transaction , valuation. 
+
+Factless fact tables:
+---------------------
+when a fact is not captured in a fact table and the dimensions cannot measure the data then it is called as factless
+fact table. ex: for a day no holding and transaction is captured for a security so no measure is done .. for all
+transaction 0 is present in fact table which is not giving the details and hence they are factless fact tables
+
+Confirmed facts and Confirmed dimensions:
+-----------------------------------------
+The dimensions which can be used by more than 1 fact tables are called confirmed dimensions like security is used by holding and transaction table.
+
+The facts which can be used in multiple datamart with combination of other fact tables are called as confirmed fact tables.
+ex: in a datamart there are few fact table and if those tables are used with holding fact tables then holding fact table
+is called as confirmed facts.
+
+Aggrigate tables:
+------------------
+The tables which are used to store the aggrigated information of data is called aggrigate tables.
+example : for a security if the total sales for a week is stored in another table then it is called as aggrigated tables.
+Aggrigated tables helps in increasing the performance of sqls as we don't need to aggrigate and then show the data in reporting or use this data after calculation. We can simple fetch the aggrigated data.
+
+Data mart :
+----------
+Data mart is a subset of Datawarehouse and it is specially build for specific departments where as datawarehouse is a collection of all types of data.
+
+Data mining:
+------------
+It is used to analyse the data present in dataware house and get insights from the data. The analysis is done in order to get hidden details about data. Data mining algorithms are used for predictive analysis.
+
+When we use data normalization:
+-------------------------------
+For transactional system we use data normalization to speedup to reduce data redundency and it actually solves the problem 
+of insert update delete which may accidently corrupt the entire data.Ex: if a student details and hod details are present in the same table then for each new student the hod details and branch will be same. If by mistake hod detail of 1 row is 
+updated then the remaining data will be incorrect.Also if a detail needs to be changed the update will run on all the rows which is very costly and hence to respond quick to applications in OLTP system we split table into different tables basedd on functional dependencies.
+
+Where as in datawarehouse our main focus is to do reporting and data analyse and we don't perform DMLs. We follow SCD-2 and above so there is no need to make seperate tables and hence everything is stored in a single table.
+
+The databases on which transactions happen frequently are called as OLTP(online transaction processing)
+and the once which stores history and reporting happens on it are called as OLAP(online analytical processing).
+
+Time series data is a data changing with time ( fixed duration of time ).
+ex: stock prices of a fund , turnover rates each month etc.
+
+Datalake is like a container which consists of various types of data coming from various sources like RDBMS unstructured data, log files etc. which is blended properly so that any system can connect and consume the data for analytics , data mining etc.
+
+Fact tables are those which consists of dependent details which are of no use without the reference data and dimension tables are those which contains reference data.
+
+ex: Fund data and security data are dimension tables and holdings , trades , valuations are fact tables.
+
+If we have various facts and dimensions tables in an OLTP system and if we want to get complex details
+from the stored data then various joins are required which is not good in OLTP system as the transaction data needs to be accessed very frequently and using many joins can increase cpu cost which might bring performance issues, thus in dataware house we perform the below tasks while designing schemas:
+
+1) club dimension tables to create less tables if possible.
+
+2) use star schema which is basically having a fact table in the center surrounded by dimension tables and all the primary keys of dimension tables will be foreign key of fact table.
+
+Using this the joins will be reduced and the data can be fetched more effectively and fast.
+
+3) In some cases when we have hugh dimension tables then denormalizing multiple tables into a single table is not a good idea. In this case we normalize the single dimension table into multiple dimension tables and then adding the primary keys into fact table as foreign keys.This creates snowflake schema which is a varient of star schema.
+
