@@ -2,7 +2,6 @@ Surrogate key:
 --------------
 surrogate key is a unique key which can be declared as a primary key to identify the records. Mostly these keys are incremented integers or auto incremented columns in database.
 
-
 Normalization:
 --------------
 Normalization is a process of removing the redundency in the data in a table. By making a table as normalized we can reduce data redundency and can solve the problem of insert , delete or update which happens in denormalized table.
@@ -139,3 +138,15 @@ Unconnected lookup transformation is more prefered than connected lookup because
 only when a certain condition is met in an expression and thus caching of data will be controlled where as 
 connected lookup will be called always because it is connected to pipeline and hence caching data will be more which 
 might slow down the process.
+
+Pushdown optimization:
+''''''''''''''''''''''''
+Whenever we execute the session informatica reads the data , transforms the data in informatica memory and loads the data but in this option the the mapping logic will be converted into sql and will be fired on the database directly.
+This can be enables at :
+1) source level
+2) target level 
+3) full pushdown
+
+There are 2 types of transformation:
+1) active and passive - this is based on number of input rows fed and output rows recieved from transformation
+2) connected and unconnected - this is based on the connection of transformation in data pipeline.
