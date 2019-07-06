@@ -177,3 +177,71 @@ Using this the joins will be reduced and the data can be fetched more effectivel
 
 3) In some cases when we have hugh dimension tables then denormalizing multiple tables into a single table is not a good idea. In this case we normalize the single dimension table into multiple dimension tables and then adding the primary keys into fact table as foreign keys.This creates snowflake schema which is a varient of star schema.
 
+why trancate is faster than delete?
+------------------------------------
+Delete table command is a logged operation.So the deletion of each row gets logged in the transaction log, which makes it slow where as truncate won't log the deletion of each row and hence its faster.
+
+what is corelated subquery
+------------------------------------------------------------
+Correlated subquery is a type of subquery which uses the columns of outer query to evaluate the result.
+The column of outer query is referred.
+
+-- 5th lowest sal
+select * from emp e1 where 5=(select count(sal) from emp e2 where e2.sal<=e1.sal)
+
+
+Types of indexes:
+-----------------
+1) Btree
+2) Bitmap
+
+By default Btree index is created.
+If no indexes are there on the column then oracle performs linear search.
+In Case of Btree index , internally oracle creates a tree structure with searched record as index node (sal=3000) with left and right pointers. Left pointer further points to records less than index node (3000) and right pointer search records which are greater or equal to index node (can be 4000,3000 etc). When 3000 is found using this technique then oracle gives rowid i.e address of records which are equals to 3000 and gives output. 
+
+
+Bitmap index:
+-------------
+When ever we create a bitmap index , oracle creates a bitmap for each unique value of a single column.
+This type of indexes are used when we have fewer distinct values in columns on which index need to be created.
+Below is an example of bitmap index:
+If we have a gender column having male and female values then oracle creates the below structure:
+
+gender
+-------
+m
+f
+m
+f
+f
+
+
+male  female
+----  ------
+1		0
+0		1
+1		0
+0		1
+0		1
+
+so the above structure is created by oracle and based on 1s and 0s the rows are found i.e
+select * from table where gender='M' -- this will search male with 1 values and the data is returned.
+
+
+Hash joins:
+-----------
+Hash join is applied when we have hugh datasets.
+The optimizer picks the small table and creates a hash table out of it and then it picks the join key 
+from the larger table and creates the hash key. Then it scans the small table for all rows and return data if found.
+Hash joins are only applicable on equi joins.
+
+Nested loop joins:
+-----------------
+Nested loop joins are used between 2 tables if one of the table is small and other table is big.
+In this join the records from the smaller table is searched in the larger table in loop on the indexed column of large table.
+ex:
+name is searched in the phone number directory to get number.
+here the table containing names is a small table where as the directory table is large tables so names are searched in loop in directory table to get phone number.
+
+select n.name,d.phone_number from names n inner join directory d on n.names=d.names;
+NOTE: THERE MUST BE INDEX ON D.NAMES COLUMNS TO PERFORM NESTED LOOP JOINS.
