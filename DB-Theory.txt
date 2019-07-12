@@ -1,3 +1,48 @@
+---------------
+important sqls:
+---------------
+---------
+--sqls:
+---------
+
+-- list of employees with same sal
+select * from emp e1 inner join emp e2 on e1.sal=e2.sal and e1.empno <> e2.empno;
+
+-- get the dept no which is in employee but not in dept table
+select * from emp e left join dept d on e.deptno=d.deptno where d.deptno is null
+
+-- get 3rd highest salary ( for 3rd lowest salary reverse the inner condition )
+select * from emp e where 3=(select count(sal) from emp e1 where e1.sal > e.sal)
+
+-- max sal based on deptno
+select max(sal),deptno from emp group by deptno;
+
+-- emp name starts with vowels
+SELECT *
+  FROM emp
+ WHERE    UPPER (ename) LIKE 'A%'
+       OR UPPER (ename) LIKE 'E%'
+       OR UPPER (ename) LIKE 'I%'
+       OR UPPER (ename) LIKE 'O%'
+       OR UPPER (ename) LIKE '%U';
+
+-- get 4th row
+select * from (
+select rownum as rownum_id,a.* from emp  a ) where rownum_id=4
+
+-- top 3 sal
+select * from (
+select sal from emp  order by 1 desc) where rownum <4 
+
+
+-- odd rows ( for even rows outer condition should be rownums=0
+select * from (
+select mod(rownum,2) as rownums,a.* from emp a ) where rownums=1
+
+
+
+------- Theory and concepts -------
+
 dml(data manipulation language)
 ddl(data definition language)
 tcl(transaction control language)
@@ -106,8 +151,6 @@ Dimension table consists of primary keys which are used as foreign keys in fact 
 Fact:
 -----
 A fact is a table containing measure of dimensions.It contains dimension keys (forein keys) and a measure.
-
-
 here fact tables are holding , transaction , valuation and dimension tables are fund , security.
 In fact tables the data is present at the lowest grain like everyday transaction, everyday holding , everyday details of each security etc. where an in dimension table we have reference data which can be linked to fact tables to give meaning to dimension. A list of security is making no significance but the details i.e measure of securities using holding transaction is making sense.
 
@@ -177,71 +220,199 @@ Using this the joins will be reduced and the data can be fetched more effectivel
 
 3) In some cases when we have hugh dimension tables then denormalizing multiple tables into a single table is not a good idea. In this case we normalize the single dimension table into multiple dimension tables and then adding the primary keys into fact table as foreign keys.This creates snowflake schema which is a varient of star schema.
 
-why trancate is faster than delete?
-------------------------------------
-Delete table command is a logged operation.So the deletion of each row gets logged in the transaction log, which makes it slow where as truncate won't log the deletion of each row and hence its faster.
 
-what is corelated subquery
-------------------------------------------------------------
-Correlated subquery is a type of subquery which uses the columns of outer query to evaluate the result.
-The column of outer query is referred.
+Triggers:
+--------
+These are the process which we create in database which executes when an event is occured. There are different types of triggers. They are:
 
--- 5th lowest sal
-select * from emp e1 where 5=(select count(sal) from emp e2 where e2.sal<=e1.sal)
+1) DML triggers -- when insert update or delete happens on tables.
+
+2) DDL triggers -- when alter,truncate,drop
+
+3) System event triggers -- when a system event happens like startup,shutdown,logon,logoff of database.
+
+4) Instead of triggers -- these are written on top of views and when an update,insert,delete happens on 
+the view it fires.
+
+5)Compound triggers -- these are same as DML triggers but the only difference is that all the events like insert , update , delete can be written in a single block.
 
 
-Types of indexes:
+Difference between delete and truncate:
+----------------------------------------
+
+Delete is a DML command and Truncate is a DDL command.
+Delete needs commit and works with where condition where as truncate is autocommit and does not runs with where condition.
+Triggers can be created with Delete but no triggers can be created on truncate action.
+Delete is slower because there is undo segment which is used for rollback where as in Truncate no undo segment is used.
+Delete does not reduce the table size where as Truncate makes the size to 0. This is because the table size goes to the freesize block and freesize can be used by other tables.
+
+Difference between procedure and functions:
+-------------------------------------------
+Procedures are plsql blocks which can return value using the in out or the out parameter where as function
+can return value using the return keyword.
+
+Procedures cannot be executed using select statements
+where as functions can be executed using select statements.Functions with DML statements cannot be called using select statement , it can be called using autonomous transactions or child transactions written in the function.
+
+Return keyword used in the procedure is used to exit from the procedure based on a condition where as return keyword in function is used to return a value from function.
+
+NOTE: function can be compiled without return statement
+but when executed it will give error.
+
+NOTE: from 12.1 onwards procedure and function can be created using with clause , it does not need plsql block. Just like lambda functions in python.
+
+NVL2 function:
+--------------
+select nvl2('a','b','c') from dual
+
+if 1st argument is null then it will return 3rd 
+and if 1st argument is not null then it will return 2nd
+
+it is opposite to nvl.
+
+NULLIF function:
+----------------
+select nullif('a','a') from dual -- output is null
+
+if both the args are same then it will return null
+if both the args are different then it will return first arg.
+
+select nullif('a','b') from dual -- output is 'a'
+
+COALESCE function:
+-------------------
+select coalesce(NULL,'b','c','d') from dual;
+
+oracle checks the first value which is not null and returns the same.
+ex: in the above sql it will return 'b'
+
+select coalesce(NULL,NULL,'c','d') from dual;
+in the above sql it will return 'c'
+
+
+Difference between Rank and dense Rank:
+----------------------------------------
+
+Rank and Dense Rank function is used to get the rank of the record
+based on the column which must be sorted.The difference between both is :
+consider an example:
+
+sal rank   dense rank
+--- ----  ------------
+100	 1			1
+200	 2			2
+200	 2			2
+300  4 (case1)	3 (case2)
+400  5			4
+400  5			4
+500  7			5
+
+Here in rank the last rank value must be equals to total number of records
+In dense rank the last rank value will not be equals to total number of records
+
+In rank the value is skipped if a records repeat like case1 where as in 
+dense rank the values will not be skipped.
+
+sqls:
+****
+
+SELECT empno,
+       ename,
+       deptno,
+       sal,
+       RANK () OVER (ORDER BY sal)           AS RANK_COL,
+       DENSE_RANK () OVER (ORDER BY sal)     AS DENSE_RANK_COL
+  FROM emp;
+  
+  						rank    dense_rank
+  						------  --------	
+7369	SMITH	90	800	    1	1
+7900	JAMES	30	950	    2	2
+7876	ADAMS	20	1100	3	3
+7521	WARD	30	1250	4	4
+7654	MARTIN	30	1250	4	4
+7934	MILLER	10	1300	6	5
+7844	TURNER	30	1500	7	6
+7499	ALLEN	30	1600	8	7
+7782	CLARK	10	2450	9	8
+7698	BLAKE	30	2850	10	9
+7566	JONES	20	2975	11	10
+7788	SCOTT	20	3000	12	11
+7902	FORD	20	3000	12	11
+7839	KING	10	5000	14	12
+
+Get the distinct records without distinct:
+------------------------------------------
+select deptno from emp union select deptno from emp; -- here union will show distinct records
+select deptno from emp intersect select deptno from emp; -- here intersect gives the common records
+select * from (
+select deptno,row_number() over (partition by deptno order by deptno) r from emp)
+
+10	1
+10	2
+10	3
+20	1
+20	2
+20	3
+20	4
+30	1
+30	2
+30	3
+30	4
+30	5
+30	6
+
+after applying where r=1 we get unique records
+
+ Generate 10 numbers without loop:
+ ---------------------------------
+ select rownum from dual connect by level<11;
+
+
+Difference between replace and translate function:
+--------------------------------------------------
+
+select replace('welcome to oracle','oracle','python') from dual; -- welcome to python
+
+select translate('welcome to oracle','oracle','python') from dual; -- wnohpmn tp python
+
+replace function is used to replace a part of string with the 3rd parameter where as translate function 
+is used to replace each character mentioned in 2nd parameter with the characters of 3rd parameter.
+
+Views and Mviews:
 -----------------
-1) Btree
-2) Bitmap
-
-By default Btree index is created.
-If no indexes are there on the column then oracle performs linear search.
-In Case of Btree index , internally oracle creates a tree structure with searched record as index node (sal=3000) with left and right pointers. Left pointer further points to records less than index node (3000) and right pointer search records which are greater or equal to index node (can be 4000,3000 etc). When 3000 is found using this technique then oracle gives rowid i.e address of records which are equals to 3000 and gives output. 
+Views does not hold its own data. It is build on top of table.
+DMLs can be executed on simple view with no joins and no aggrigations where as DMLs are not allowed on 
+complex views with joins and aggrigations.
 
 
-Bitmap index:
--------------
-When ever we create a bitmap index , oracle creates a bitmap for each unique value of a single column.
-This type of indexes are used when we have fewer distinct values in columns on which index need to be created.
-Below is an example of bitmap index:
-If we have a gender column having male and female values then oracle creates the below structure:
+DMLs and DDLs in procedure and function:
+----------------------------------------
+DMLs can not be executed in a function or procedure directly. It can be executed if a function has pragma autonomous transaction.
 
-gender
--------
-m
-f
-m
-f
-f
+DDLs can not be executed in a function or procedure directly. It can be executed using execute immediate
+block and using pragma autonomous tramsaction.
 
 
-male  female
-----  ------
-1		0
-0		1
-1		0
-0		1
-0		1
+Can a function return more than 1 value:
+-----------------------------------------
+Yes a function can return more than 1 value. Using the return statement and OUT parameter in a function, 
+it can return more than 1 value. This cannot be called via select statement , instead it can be called via begin end block.
 
-so the above structure is created by oracle and based on 1s and 0s the rows are found i.e
-select * from table where gender='M' -- this will search male with 1 values and the data is returned.
+View and Materialized view:
+-----------------------------
 
+when ever we access view then it executes the query on the underlying table and gives the result
+where as when ever we access mviews then it fetches the data stored in mview. The query will not hit the underlying table. To get the latest data mviews needs to be refreshed where as in views, any changes in the underlying table will be directly reflected in view.
 
-Hash joins:
------------
-Hash join is applied when we have hugh datasets.
-The optimizer picks the small table and creates a hash table out of it and then it picks the join key 
-from the larger table and creates the hash key. Then it scans the small table for all rows and return data if found.
-Hash joins are only applicable on equi joins.
+Types of Mview refresh:
+-----------------------
+There are 3 types of refresh :
 
-Nested loop joins:
------------------
-Nested loop joins are used between 2 tables if one of the table is small and other table is big.
-In this join the records from the smaller table is searched in the larger table in loop on the indexed column of large table.
-ex:
-name is searched in the phone number directory to get number.
-here the table containing names is a small table where as the directory table is large tables so names are searched in loop in directory table to get phone number.
+1) Complete refresh
+2) Fast refresh (MV logs are used to capture incremental data)
+3) Force refresh
 
-select n.name,d.phone_number from names n inner join directory d on n.names=d.names;
-NOTE: THERE MUST BE INDEX ON D.NAMES COLUMNS TO PERFORM NESTED LOOP JOINS.
+1) In this refresh we truncate the mv and reload the data from the base table.
+2) In this we only perform incremental refresh i.e the records which are changed will be updated in MV.
+3) In this we first go for fast refresh but in case of any errors (MV log is corrupted) the refresh switches to complete refresh.
