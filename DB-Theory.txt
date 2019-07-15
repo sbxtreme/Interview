@@ -237,6 +237,17 @@ the view it fires.
 5)Compound triggers -- these are same as DML triggers but the only difference is that all the events like insert , update , delete can be written in a single block.
 
 
+Before and After triggers : before triggering event or after triggering event.
+
+Row level triggers: If a row is affected then row level trigger will fire
+statement level trigger : If a statement is execute but it does not affect row then also statement trigger 
+will fire.
+
+update table set name='aaa' where name='bbb' 
+if update runs and it updates a row then statement level and row level will fire
+else statement level will fire.
+
+
 Difference between delete and truncate:
 ----------------------------------------
 
@@ -416,3 +427,200 @@ There are 3 types of refresh :
 1) In this refresh we truncate the mv and reload the data from the base table.
 2) In this we only perform incremental refresh i.e the records which are changed will be updated in MV.
 3) In this we first go for fast refresh but in case of any errors (MV log is corrupted) the refresh switches to complete refresh.
+
+
+Which one is faster Union or Union all:
+----------------------------------------
+Union is faster than Union all because union removes duplicate and sort the input which takes more time where as Union all 
+gives all the data.
+
+% rowtype in sql:
+-----------------
+If we want to fetch multiple columns for a single row so we can use %rowtype. It's like collections or varrays but 
+it can only hold 1 row.Below is an example
+
+DECLARE
+    l_data   emp%ROWTYPE;
+BEGIN
+    SELECT *
+      INTO l_data
+      FROM emp
+     WHERE empno = 7369;
+
+    DBMS_OUTPUT.put_line (l_data.empno || '_' || l_data.ename);
+END;
+
+
+Types of indexes:
+-----------------
+1) Btree index
+2) Bitmap index -- created on the columns which has very less distinct values
+3) Function based index -- 
+if we create normal index on a column and using a function so oracle will not consider index
+hence we create function based index like upper(ename) is a function so we create index and mention 
+function which will be used on column.
+4) Simple index -- index created on 1 column 
+5) Composite index -- index created on mutliple columns
+** the address is stored in rowid column **
+
+Data dictionary views:
+---------------------
+
+select * from v$sql -- it stored which sql is executed and using this we get sqlid
+select * from v$sql_plan where sqlid = <sqlid from above> -- using this we get plan picked by sql
+
+Cardinality : distinct value in a column/ total number of rows
+Cost : 
+
+Type of scans in index:
+-----------------------
+1) Range scan - normal indexes created on the table performs range scan i.e it search it find the value and continue 
+so that it does not miss the value due to duplicates.. example 2 employee with same name so it will search 
+till it finds different employee name in btree structure.
+
+2) Unique scan - when we create unique index then this will perform.
+
+3) Index full scan - oracle goes to index segment to perform aggrigation instead on table column.
+select max(sal) from emp; -- here sal column consists of index.
+
+Disadvantages of Btree-- The dml performance will degrade because oracle needs to rearrange the columns which have
+btree indexes which will degrade the performance. Also Bitmap is faster when we have few distinct values.
+
+Bitmap index:
+-------------
+This is created when we have less distinct values in a column. Ex: Male , Female details in Gender column.
+Oracle internally creates a bitmap matrix with columns Male and Female and values as 1 and 0. 1 for avaible 
+and 0 for not available ( if male is available in a row then 1 else 0 , same with female)
+
+Disadvantage is when DML acts on the bitmap columns then oracle locks the rows having same value.
+update table set gender='M'; -- here all the rows with M will be locked in bitmap and takes large resource.
+
+
+SQL loader:
+------------
+This is a utility provided by sql to load files in database.
+
+All the details are mentioned in control file
+1) source details
+2) target details
+3) conditions which will filter the data while loading (discarded records)
+4) format of file (csv tab etc)
+
+LOG FILE : It will log the details of sql loader
+DISCARDED FILE : It will keep the discarded records
+BAD FILE : It will keep the failed records
+
+
+Varray , Nested and Associative Array:
+--------------------------------------
+
+  no of elements:
+  --------------
+  varray : Maximum elements in an array is defined at the defination type so we cannot extend
+  Nested : we can extend with any number of elements
+  Associative : we can extend with any number of elements
+
+  Index:
+  --------------
+  varray : index will be integer
+  Nested : index will be integer
+  Associative : index can be varchar2 or integer
+
+
+  Extend keyword:
+  --------------
+  varray : Applicable
+  Nested : Applicable
+  Associative : NA
+
+Exceptions:
+-------------
+1) System defined exceptions which we can use directly in exception block like ZERO_DIVIDE
+exception when ZERO_DIVIDE then ------
+
+2) User defined exceptions which we create our own custom message.
+we take a exception type of variable like v_exp exception ; and then in the code we do raise v_exp.
+in the excception block we do 
+exception when v_exp then --------
+
+3) To handle an unnamed exception like precision error etc. we use pragma exception_init
+
+4) For user defined error we can also use raise_application_error, this will give more standard errror messages.
+
+
+
+Cursors:
+----------
+cursor declare
+cursor open
+cursor loop
+cursor fetch
+cursor close
+
+cursor stores the selected data in memory where as nested tables stored the data in objects.
+
+Types of cursors:
+------------------
+1) Implicit cursors -- oracle internally create cursors while executing select statement.
+2) Explicit cursors -- we create cursors . There are types of Explicit cursors. They are:
+  -- NAMED
+  -- REF
+    >>> Strong typed
+    >>> Weak typed
+  -- FOR
+
+Cursor attributes:
+-------------------
+>> isopen -- is open or not 
+>> found -- record found in cursor 
+>> notfound -- record not found in cursor
+>> rowcount -- how many records fetched from cursor
+
+Parameterized cursors are those which takes parameter and based on that parameter it selects data from table.
+ex: for dept 10 and 20 we have declared a parameterized cursor and in program while opening cursor we will 
+pass parameters.
+
+FOR cursor is used when we don't want to declare cursor.It's like for loop :
+
+begin
+for i in (select ename,dept from emp)
+loop
+dbms_output.put_line(i.ename||'-'||i.dept)
+end loop;
+end;
+
+
+REF cursor:
+----------
+It is a special type of cursor in which same cursor name can be used for different sqls.
+We define the cursor as ref cursor but does not provide the query.
+When we open the cursor then we provide the select statement.
+Dynamic Sqls can also be assigned to ref cursor
+
+Strong ref cursor:
+----------------- 
+The ref cursor which has return type are called strong ref cursor. ex: a ref cursor which is defined is only intended 
+to return the rows from emp not from dept then we add return keyword emp%rowtype . Now if i use the same ref cursor 
+for dept , it will give error.
+
+Weak ref cursor:
+---------------
+When we don't give return type.
+
+
+sys ref cursor:
+---------------
+function ---> returns sysrefcursor ---> can be used and assigned to sysrefcursor of another begin end block.
+
+Cursor FOR UPDATE clause:
+-------------------------
+a program is executing on 1 session which is using cursor to get the data and based on that data 
+update is running on table. Support before running update delete has run in some other session , 
+so update will not update the records .. which is a flaw. To lock the transaction in which a cursor
+based program is running which is also updating , we use FOR UPDATE clause while declaring cursor.
+This will lock the transaction and no one can run dml on the table.
+
+
+Difference between cursor and collections:
+--------------------------------------------
+Collections are generally used for bulk processing. In cursors the data is processed sequentially. Using collections we can  process all the data in one go.It can be passed as parameter to sub programs like lists to another program.
