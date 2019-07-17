@@ -1662,6 +1662,75 @@ user -------> django -------> URLs--------> Views
 						|----------------->Templetes
 
 
+
+
+
+Django uses the below types of inheritance:
+1) Abstract class inheritance
+In models.py when we create models, if 2 or more models are having same fields then instead of 
+repeating the code we use this inheritance model.Using this we create an abstract class which stores the 
+common fields and then we inherit this class to other classes.
+
+# abstract class
+class ContactInfo(models.Model):
+    name=models.CharField(max_length=100)
+    email=models.CharField(max_length=200)
+    address=models.CharField(max_length=200)
+
+    class Meta:
+        abstract=True
+
+# child class inherits from ContactInfo class.
+class CustomerInfo (ContactInfo):
+    phone=models.CharField(max_length=100)
+
+class Staff(ContactInfo):
+    staffcode=models.CharField(max_length==100)
+
+Only 2 tables will be created/pointed in database CustomerInfo and Staff.
+
+
+2) Multi table inheritance
+This type of inheritance is same as abstract class inheritance but the only difference is that the base class will not be treated as abstract class instead it will also be treated as a table and while makemigrations , a new table will be created in database of base class.
+
+ex:
+
+# base class
+class ContactInfo(models.Model):
+    name=models.CharField(max_length=100)
+    email=models.CharField(max_length=200)
+    address=models.CharField(max_length=200)
+
+# child class inherits from base class
+class CustomerInfo(ContactInfo):
+    phone=models.CharField(max_length=100)
+
+class Staff(ContactInfo):
+    staffcode=models.CharField(max_length==100)
+
+so 3 tables will be created in database ContactInfo,CustomerInfo,Staff
+
+
+3) Proxy model inheritance
+
+
+Use of middleware:
+1) Session management
+2) User authentication
+3) Cross site request
+
+Features of Django:
+1) Admin part
+2) ORM 
+3) Templeting
+4) Internationalization
+5) Autherization and Authentication
+6) Testing framework
+
+Make migrations and migrate are the 2 commands which we use to run after changing the models.py and database datamodel.
+So any changes in the database or done in the ORM should be migrate so that django can use the latest model and can perform CRUD operation on the database.
+
+
 String functions:
 -----------------
 capitalize() − Capitalizes first letter of string.
