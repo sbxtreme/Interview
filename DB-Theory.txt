@@ -624,3 +624,30 @@ This will lock the transaction and no one can run dml on the table.
 Difference between cursor and collections:
 --------------------------------------------
 Collections are generally used for bulk processing. In cursors the data is processed sequentially. Using collections we can  process all the data in one go.It can be passed as parameter to sub programs like lists to another program.
+
+
+Bulk collect advantages:
+-------------------------
+While running a plsql program with plsql context and sql context there is context switching happens. Plsql engine will process plsql part where as sql engine will process sql part. To reduce context switching and to speed up the process, 
+bulk collect is used. Instead of row by row processing the complete sql data will be stored in a variable and then we can process.
+
+Bulk collect can be used with table datatypes like nested table varrays and associated table and can also be used in explicit cursors.
+
+fetch the result of cursor into a table data type using bulk collect into clause. 
+
+This will reduce context switching of cursor to store rows in table type.
+
+bulk collect can be used with cursors
+bulk collect can be used with table data types
+
+
+FOR ALL (bulk dml operations)
+-------
+select into table variable.
+for all i in 1..table variable.count
+insert into table values table variable(i)
+save exception
+at last get failed records using save exception and store in table.
+If we want to perform bulk dml operations without context switching , we can do using FOR ALL.
+In FOR ALL we can apply save exceptions for the failed rows. The dml will not fail if any record failed.
+In FOR ALL we can only use 1 dml at a time.. like only insert, only update , only delete.
