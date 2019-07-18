@@ -1711,7 +1711,10 @@ class Staff(ContactInfo):
 so 3 tables will be created in database ContactInfo,CustomerInfo,Staff
 
 
-3) Proxy model inheritance
+3) Proxy model inheritance:
+When two or model seperate screens needs to be build on top of same database table but the functionality is different 
+then we use this type of model inheritance. Here we create a proxy model which is inherited from the main model 
+and under meta class we use to give the columns which needs to be used.
 
 
 Use of middleware:
