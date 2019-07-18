@@ -651,3 +651,40 @@ at last get failed records using save exception and store in table.
 If we want to perform bulk dml operations without context switching , we can do using FOR ALL.
 In FOR ALL we can apply save exceptions for the failed rows. The dml will not fail if any record failed.
 In FOR ALL we can only use 1 dml at a time.. like only insert, only update , only delete.
+
+
+-- the scheme for which rows needs to be hidden ( sbxtreme schema)
+-- Function should be created in SBXTREME schema
+create or replace function vpd_hide_dept
+(
+p_schema in varchar2,
+p_object in varchar2
+) return varchar2
+as
+begin
+return 'deptno<>10';
+end;
+/
+
+
+-- Policy should be created in SCOTT schema 
+--( here object_name=>'EMP' is synonym created on scott.emp table in SBXTREME schema)
+begin
+  dbms_rls.add_policy(
+  object_schema=>'SBXTREME',
+  object_name=>'EMP',
+  policy_name=>'EMP_DEPTHIDE_VPD',
+  function_schema=>'SBXTREME',
+  policy_function=>'vpd_hide_dept');
+  end;
+  /
+
+
+select * from all_policies where policy_name like '%EMP%';
+
+exec dbms_rls.drop_policy('SBXTREME','EMP','EMP_DEPTHIDE_VPD')
+
+
+-- this will not show records if logged in to SBXTREME schema but will show records if logged in to SCOTT schema
+select * from emp where deptno=10;
+
