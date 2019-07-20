@@ -1,0 +1,57 @@
+For API creation using django below libraries and files needs to be present in your app 
+folder.
+
+1) Library : djangorestframework
+2) Under installed_apps section in settings.py have an entry as 'rest_framework'
+3) Below folder/files needs to be created inside app folder
+
+api/serializers.py
+
+from rest_framework import serializers
+from emp_det.models import EmployeeDetail #here EmployeeDetail is model class from models.py step1
+
+class EmpSerializer(serializers.HyperlinkedModelSerializer):
+
+	class Meta:
+		model=EmployeeDetail # using from step1
+		fields=('empno','ename','designation','mgr','hiredate','sal','commission','deptno','dname','loc')
+
+api/viewsets.py
+
+from emp_det.models import EmployeeDetail # here EmployeeDetail is model class from models.py 
+from .serializers import EmpSerializer # class from serializers file
+from rest_framework import viewsets
+from rest_framework.response import Response
+
+class EmpDetViewSet(viewsets.ViewSet):
+	def list(self,request):
+		queryset= EmployeeDetail.objects.all()
+		serializer=EmpSerializer(queryset,many=True)
+		return Response(serializer.data)
+
+
+4) Under project the below file needs to be created
+
+router.py ( code below )
+
+from emp_det.api.viewsets import EmpDetViewSet # EmpDetViewSet is from viewsets.py file
+from rest_framework import routers
+
+router=routers.DefaultRouter()
+router.register('emp_det',EmpDetViewSet,basename='emp_det')
+
+
+5) Entry should be made in urls.py
+
+from django.urls import path,include
+from .router import router
+
+path ('api/',include(router.urls)) # in urlpatterns
+
+
+In the brower type the below url: ( this will give json format data )
+http://127.0.0.1:8000/api/emp_det/?format=json
+<url>/api folder/app name/data in json format
+
+
+****** For Security and token/session authentication refer django official documentation
