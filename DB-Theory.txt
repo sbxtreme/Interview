@@ -565,7 +565,7 @@ exception when ZERO_DIVIDE then ------
 
 2) User defined exceptions which we create our own custom message.
 we take a exception type of variable like v_exp exception ; and then in the code we do raise v_exp.
-in the excception block we do 
+in the exception block we do 
 exception when v_exp then --------
 
 3) To handle an unnamed exception like precision error etc. we use pragma exception_init
@@ -734,3 +734,109 @@ at last get failed records using save exception and store in table.
 If we want to perform bulk dml operations without context switching , we can do using FOR ALL.
 In FOR ALL we can apply save exceptions for the failed rows. The dml will not fail if any record failed.
 In FOR ALL we can only use 1 dml at a time.. like only insert, only update , only delete.
+
+
+Pragma autonomous transaction:
+------------------------------
+This clause is used to create a child transaction which is seperate from main transaction.
+Below is the example in which we are performing a transaction on table X and if any error we rollback 
+but if no error we commit. In case of rollback we are error logging and calling error logging proc.
+Inside error logging proc we use pragma autonomous transaction which creates a child transaction which is 
+seperate from main PXXX procedure transaction. In Case of rollback, commit still will happen in 
+Logging proc.
+
+
+create procedure PXXX
+Begin 
+
+Block of code inserting data in X
+Block of code updating data in X
+Block of code deleting data in X
+
+commit;
+
+Exception when other then 
+Logging procedure called (linenumber,sqlerrorcode,sqlerrormsg)
+rollback;
+End;
+
+
+create or replace procedure Logging procedure 
+declare section 
+Prgma autonomous transaction 
+begin 
+logging into table 
+commit;
+end;
+
+Pragma Serially_resuable:
+--------------------------
+In a single session if we want to use a variable and every time we use the value of variable should reset.
+This can be acheived using Pragma Serially_resuable.
+Ex:
+
+create or replace package test1
+as
+pragma serially_reusable;
+var number:=0;
+end;
+/
+
+create or replace package test2
+as
+var number:=0;
+end;
+/
+
+begin
+test1.var:=test1.var+1;
+test2.var:=test2.var+1;
+dbms_output.put_line(test1.var);
+dbms_output.put_line(test2.var);
+end;
+/
+
+output after 2 runs:
+--------------------
+1
+2 (variable of test2 will be increased and will not be set to 0)
+
+
+Pragma_exception_init:
+----------------------
+There are many errors which does not have a predefined error name. Like precision error 
+Using Pragma_exeception_init we can give names to the errors which does not have predefined error names.
+
+pragma exeception_init(user_defined_Exception,error code);
+
+DECLARE
+  val                NUMBER;
+  divide_by_zero_err EXCEPTION;
+  pragma exception_init(divide_by_zero_err,-01476);
+BEGIN
+  SELECT 0.1231/0 INTO val FROM dual;
+  dbms_output.put_line(val);
+EXCEPTION
+WHEN divide_by_zero_err THEN
+  dbms_output.put_line('DIVIDE BY ZERO ERROR CAUSED!!!!!');
+END;
+/
+
+How to declare a multidimensional array:
+------------------------------------------
+
+using varray we can define multidimensional arrays.
+Below is the syntax:
+
+declare 
+type matrix_type_arr is varray(3) of number;
+type matrix_type is varray(3) of matrix_type_arr;
+
+Can we use commit in a trigger:
+-------------------------------
+Yes we can use commit in a trigger using pragma autonomous_transaction ;
+
+lets say we created trigger after update trigger on emp table which will insert the user details in a table.
+
+if we update but we rollback so the insert inside the trigger will also be rolledback as its in 1 transaction, so 
+using autonomous_transaction in trigger we can still use commit in a trigger as it will create a seperate child transaction.
