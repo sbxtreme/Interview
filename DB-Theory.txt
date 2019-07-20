@@ -17,6 +17,29 @@ select * from emp e where 3=(select count(sal) from emp e1 where e1.sal > e.sal)
 -- max sal based on deptno
 select max(sal),deptno from emp group by deptno;
 
+--- get avg sal of each dept with all details
+select avg(sal) over (partition by deptno order by deptno), e.* from emp e -- here partitioned by deptno means group by deptno
+;
+
+-- get all the joinee who joined recently
+select * from (
+select lead(hiredate) over (partition by deptno order by deptno) recent_joinee , a.* from emp a ) where recent_joinee is null;
+
+-- get all the joinee who joined first
+select * from (
+select lag(hiredate) over (partition by deptno order by deptno) recent_joinee , a.* from emp a ) where recent_joinee is null;
+
+-- sum of all the salary dept wise
+select sum(sal) over (partition by deptno order by deptno) as cumulative_sal_Dept_wise, a.* from emp a;
+
+-- min sal on designation
+select min(sal) over (partition by job order by job ) as min_sal_on_designation ,a.* from emp a;
+
+-- oldest employee from each dept
+select * from (
+select lag(hiredate) over (partition by deptno order by deptno) as oldest_emp_date_deptwise,a.* from emp a) x
+where oldest_emp_date_deptwise is null;
+
 -- emp name starts with vowels
 SELECT *
   FROM emp
@@ -431,8 +454,7 @@ There are 3 types of refresh :
 
 Which one is faster Union or Union all:
 ----------------------------------------
-Union is faster than Union all because union removes duplicate and sort the input which takes more time where as Union all 
-gives all the data.
+Union all is faster than Union all because union removes duplicate and sort the input which takes more time where as Union all gives all the data.
 
 % rowtype in sql:
 -----------------
@@ -470,7 +492,7 @@ select * from v$sql -- it stored which sql is executed and using this we get sql
 select * from v$sql_plan where sqlid = <sqlid from above> -- using this we get plan picked by sql
 
 Cardinality : distinct value in a column/ total number of rows
-Cost : 
+Cost : Amount of CPU utilization happing for a query
 
 Type of scans in index:
 -----------------------
@@ -514,6 +536,9 @@ BAD FILE : It will keep the failed records
 Varray , Nested and Associative Array:
 --------------------------------------
 
+So the above are table datatypes in oracle plsql.
+Below are the features of each:
+
   no of elements:
   --------------
   varray : Maximum elements in an array is defined at the defination type so we cannot extend
@@ -521,7 +546,7 @@ Varray , Nested and Associative Array:
   Associative : we can extend with any number of elements
 
   Index:
-  --------------
+  -------
   varray : index will be integer
   Nested : index will be integer
   Associative : index can be varchar2 or integer
@@ -550,7 +575,7 @@ exception when v_exp then --------
 
 
 Cursors:
-----------
+--------
 cursor declare
 cursor open
 cursor loop
@@ -563,11 +588,14 @@ Types of cursors:
 ------------------
 1) Implicit cursors -- oracle internally create cursors while executing select statement.
 2) Explicit cursors -- we create cursors . There are types of Explicit cursors. They are:
-  -- NAMED
-  -- REF
+  a)NAMED
+  b)REF
     >>> Strong typed
     >>> Weak typed
-  -- FOR
+  
+  c)FOR
+  d)Parametrised cursor
+
 
 Cursor attributes:
 -------------------
@@ -579,6 +607,26 @@ Cursor attributes:
 Parameterized cursors are those which takes parameter and based on that parameter it selects data from table.
 ex: for dept 10 and 20 we have declared a parameterized cursor and in program while opening cursor we will 
 pass parameters.
+
+-- here we are passing ldeptno while declaring cursor and using it in begin block.
+DECLARE
+  l_deptno NUMBER;
+  CURSOR emp
+  AS
+    SELECT ename FROM emp WHERE deptno=ldeptno;
+BEGIN
+  l_deptno=10;
+  OPEN emp
+  LOOP
+    FETCH emp INTO v_name;
+    dbms_output.put_line(v_name);
+    EXIT
+  WHEN emp%notfound;
+  END LOOP;
+  CLOSE emp;
+END;
+
+
 
 FOR cursor is used when we don't want to declare cursor.It's like for loop :
 
@@ -597,11 +645,46 @@ We define the cursor as ref cursor but does not provide the query.
 When we open the cursor then we provide the select statement.
 Dynamic Sqls can also be assigned to ref cursor
 
+
+set serveroutput on;
+
+DECLARE
+type ref_cur_type
+IS
+  REF
+  CURSOR;
+    rc_emp_list ref_cur_type;
+    vname VARCHAR2(10);
+    vid   NUMBER;
+  BEGIN
+    OPEN rc_emp_list FOR SELECT ename FROM emp; --- here different query assign to same cursor
+    LOOP
+      FETCH rc_emp_list INTO vname;
+    EXIT
+  WHEN rc_emp_list%notfound;
+    dbms_output.put_line(vname);
+  END LOOP;
+  CLOSE rc_emp_list;
+  OPEN rc_emp_list FOR SELECT deptno FROM Dept;  --- here different query assign to same cursor
+  LOOP
+    FETCH rc_emp_list INTO vid;
+    EXIT
+  WHEN rc_emp_list%notfound;
+    dbms_output.put_line(vid);
+  END LOOP;
+  CLOSE rc_emp_list;
+END;
+
+
+** The above is a weak ref cursor as it does not have a return type
+
 Strong ref cursor:
 ----------------- 
 The ref cursor which has return type are called strong ref cursor. ex: a ref cursor which is defined is only intended 
 to return the rows from emp not from dept then we add return keyword emp%rowtype . Now if i use the same ref cursor 
 for dept , it will give error.
+
+while declaring a cursor we have to specify the return EMP%ROWTYPE if we want to return only rows from emp;
 
 Weak ref cursor:
 ---------------
@@ -618,7 +701,7 @@ a program is executing on 1 session which is using cursor to get the data and ba
 update is running on table. Support before running update delete has run in some other session , 
 so update will not update the records .. which is a flaw. To lock the transaction in which a cursor
 based program is running which is also updating , we use FOR UPDATE clause while declaring cursor.
-This will lock the transaction and no one can run dml on the table.
+This will lock the transaction and no one can run dml on the table in some other session.
 
 
 Difference between cursor and collections:
@@ -651,40 +734,3 @@ at last get failed records using save exception and store in table.
 If we want to perform bulk dml operations without context switching , we can do using FOR ALL.
 In FOR ALL we can apply save exceptions for the failed rows. The dml will not fail if any record failed.
 In FOR ALL we can only use 1 dml at a time.. like only insert, only update , only delete.
-
-
--- the scheme for which rows needs to be hidden ( sbxtreme schema)
--- Function should be created in SBXTREME schema
-create or replace function vpd_hide_dept
-(
-p_schema in varchar2,
-p_object in varchar2
-) return varchar2
-as
-begin
-return 'deptno<>10';
-end;
-/
-
-
--- Policy should be created in SCOTT schema 
---( here object_name=>'EMP' is synonym created on scott.emp table in SBXTREME schema)
-begin
-  dbms_rls.add_policy(
-  object_schema=>'SBXTREME',
-  object_name=>'EMP',
-  policy_name=>'EMP_DEPTHIDE_VPD',
-  function_schema=>'SBXTREME',
-  policy_function=>'vpd_hide_dept');
-  end;
-  /
-
-
-select * from all_policies where policy_name like '%EMP%';
-
-exec dbms_rls.drop_policy('SBXTREME','EMP','EMP_DEPTHIDE_VPD')
-
-
--- this will not show records if logged in to SBXTREME schema but will show records if logged in to SCOTT schema
-select * from emp where deptno=10;
-
