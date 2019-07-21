@@ -72,3 +72,18 @@ drinks.groupby('continent').beer_servings.agg(['max','min','mean','std','count']
 # we can plot graph in ipython notebook using the below 
 %matplotlib inline
 drinks.groupby('continent').beer_servings.agg(['max','min','mean','std','count']).plot(kind='bar')
+
+#Settingwithcopy warning
+
+'''when ever we try to assign a value to a column of dataframe without using loc operation then it throws warning
+Settingwithcopywarning, which means pandas not sure whether the changes which we are doing is on actual dataframe 
+or copy of dataframe and since it's a warning but still the values will not be changed,
+so to avoid this we use loc operation to change a value of a column'''
+
+movies[movies.content_ratings=='NOT RATED'].content_ratings==np.nan # this is wrong
+movies.loc[movies.content_ratings=='NOT RATED','content_ratings']=np.nan
+
+'''Also if we create a copy of dataframe and then try to change the value , then also the same warning is received.
+But this time the value is changed.To avoid this we should use .copy() function to copy dataframe'''
+
+new_df = movies[movies.movie_ratings>=9].copy() # this is right
