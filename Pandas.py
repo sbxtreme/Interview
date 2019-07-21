@@ -87,3 +87,6 @@ movies.loc[movies.content_ratings=='NOT RATED','content_ratings']=np.nan
 But this time the value is changed.To avoid this we should use .copy() function to copy dataframe'''
 
 new_df = movies[movies.movie_ratings>=9].copy() # this is right
+
+# how to find the count of data with null values
+movies.content_ratings.isnull().sum()
