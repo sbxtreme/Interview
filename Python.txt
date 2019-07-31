@@ -109,8 +109,31 @@ dir(a)
 ['__class__', '__delattr__', '__dict__', '__dir__', '__doc__', '__eq__', '__format__', '__ge__', '__getattribute__', '__gt__', '__hash__', '__init__', '__init_subclass__', '__le__', '__lt__', '__module__', '__ne__', '__new__', '__reduce__', '__reduce_ex__', '__repr__', '__setattr__', '__sizeof__', '__str__', '__subclasshook__', '__weakref__', 'hello']
 
 First class functions in python:
-**********************************
-In Python, functions are first-class objects. This means that they can be assigned to variables, returned from other functions and passed into functions. Classes are also first class objects.
+*********************************
+functions which can be passed as an argument to a function
+functions which can be assigned to a variable
+functions which can be returned from another function 
+
+Higher order functions:
+***********************
+The function which takes argument as a function
+
+def add(a,b):
+    return print(a+b)
+
+
+def addition(*args):
+    return args
+
+addition(add(1,3)) # here add is a first class function and addition is a higher order function.
+
+Closer functions: The function which wraps another function is called closer functions
+*****************
+def number(a,b):
+    def mult(c):
+        return((a+b)*c)
+    return mult
+
 
 Mutable and immutable datatypes in python:
 ********************************************
@@ -122,12 +145,19 @@ Namespaces in Python:
 Like every language python also maintains the namespaces in the form of python dictionaries.
 A namespace is a system to have a unique name for each and every object in Python. An object might be a variable or a method.
 There are 3 types of namespaces:
-1) Inbuit namespaces for inbuild functions like print
+1) Inbuit namespaces for inbuild functions like print (__print__(),__str__() etc)
 2) Global namespace for global variables 
 3) Local namespace for local variables
 
+ex:
+a=2
+so the namespace representation would be {a:2}
+
 serialization and deserialization using pickle
 ************************************************
+
+to convert into serialization: pickle.dump(data,f) # dump data to pickle file
+to convert into deserialization: pickle.load(data,f) # load data from pickle file
 
 data ={"name":"shobhit","age":28,"phno":[9958766250,9962058544]}
 
@@ -155,6 +185,10 @@ Out[20]: {'name': 'shobhit', 'age': 28, 'phno': [9958766250, 9962058544]}
 
 shallow copy and deep copy 
 *****************************
+shallow copy: both the datastructure pointing to same address so if someone changes the value, it will impact other.
+
+deepcopy : both the datastructure pointing to different address so if someone changes the value , it will not impact other.
+
 import copy as c
 l=[1,2,3,4]
 l1=c.copy(l) 
@@ -283,9 +317,15 @@ p2.start()
 p1.join()
 p2.join()
 
+disadvantage of Multitreading which is GIL ( global interpreter lock)
+the GIL allows only one thread to execute at a time even in a multi-threaded architecture with more than one CPU core, the GIL has gained a reputation as an “infamous” feature of Python.
+
 Also in multiprocessing there is a concept of lock ie. lock.aquire() and lock.release()
 this is used on the shared data between 2 process. Once process 1 completes its manupulation on 
-shared data then process 2 can manipulate the shared data.
+shared data then process 2 can manipulate the shared data. ( kind of GIL implementation )
+
+To overcome the GIL limitation , multiprocessing is introducted in which the program runs in different 
+execution space which uses the multiple cpu cores to execute the program.
 
 functional programming:
 ***********************
@@ -332,7 +372,6 @@ l=[1,2,4,5,20,23,39]
 
 for pos,data in enumerate(l):
     print('position is {} and data is {}'.format(pos,data))
-
 
 
 
@@ -561,7 +600,7 @@ BMW 8 5
     
     print(c1.set_speed(120))
 
-5) Inner classes 
+5) Inner classes
     Class inside a class is called as inner class. Below is an example:
     
     class student:
@@ -907,7 +946,7 @@ BMW 8 5
            print(s1.sum(3,4))  # Here you can see that 2 variables are passed in a sum functions but it is
            expecting 3 values so to adjust , we have made all the values as 0 by default in sum method.
            
-           Method overloading is not present in pythob because when we declare a method in a class, we pass 
+           Method overloading is not present in python because when we declare a method in a class, we pass 
            some arguments in a method. In python we don't need to declare the datatype of arguments passed in 
            a method which basically means that if a method with the same name and same arguments is used for string
            it can also be used for numbers that's why method overloading is not implemented in python.
@@ -1161,12 +1200,6 @@ def create_adder(x):
 add_15 = create_adder(15) 
 
 print add_15(10) 
-
-
-Higher order functions:
-***********************
-The function which takes argument as a function
-The function which gets returned inside any other function
 
 
 Metaclass:
