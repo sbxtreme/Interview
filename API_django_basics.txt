@@ -1,0 +1,229 @@
+API:
+----
+
+All the webservices and APIs but not all the APIs are webservices.
+The APIs which are called over http and internet.
+Types of Webservices:
+1) SOAP -- Simple object access protocol
+2) REST  -- Representational state transfer
+3) XML RPC -- Remote procedural calls. These are used for microservices for communication between 2 clusters 
+
+The Webservice is an engine which commnicates an API and perform operations.
+The logic is implemented on API part.
+
+CRUD operations implementations can be done in API.
+
+create- POST
+Read/Retrieve - GET
+update - PUT/PATCH
+delete - DELETE
+
+There are various HTTP methods used in Rest API:
+1)  GET -- select
+2)  PUT -- update
+3)  POST -- insert
+4)  DELETE -- delete
+
+
+Difference between PUT and PATH:
+---------------------------------
+
+Everything on the internet is considered a resource, has a location (URL) and a corresponding identifier (URI).
+Let’s imagine the internet was a street, the houses on this street were prefabricated(that’s a thing in the architectural world now) and the house addresses were URLs. Also, let’s assume the street was divided into numbered plots with a house per plot such that house-1 was on plot-1 and so on. Remember, the houses are prefabricated so they just get dropped at their location. No onsite building required.
+When you make a PUT request to ‘https://internet-street.com/plot-1’ with a prefabricated house, you’re saying “Please PUT this house in the location marked as plot-1”. That instruction searches through our street for the specified location and replaces the content at that location. If nothing is found at the location, it’ll simply PUT the resource at the location. In this case, a full prefabricated house. Thus, a PUT request always contains a full resource. This is necessary because, a necessary quality of PUT requests is idempotence — the quality of producing the same result even if the same request is made multiple times.
+If our intent is to update the house at a location, for example, say we want to add a new window, we’d make a PUT request with a full prefab house that’s identical to the former only with the number of windows changed. That seems like an awful waste of bandwidth and it is. Here’s what the house and PUT request payload would look like.
+
+-- PUT request
+{
+  address: 'plot 1',
+  owner: 'segun',
+  type: 'duplex',
+  color: 'green',
+  rooms: '5',
+  kitchens: '1',
+  windows: 20
+}
+
+
+{
+  address: 'plot 1',
+  owner: 'segun',
+  type: 'duplex',
+  color: 'green',
+  rooms: '5',
+  kitchens: '1',
+  windows: 21
+}
+
+
+We could simply choose to send the data we need and have our server code update resources appropriately, but then, we’d loose the idempotence and its benefits such as reliable caching of responses on the network and reliable updates of resources from retries when the original request fails. PUT requests are particularly useful for major updates. So, how do we make minor updates to our resources (houses) whilst being good citizens of the web. Meet PATCH, the after-thought of REST architecture.
+
+Several applications extending the Hypertext Transfer Protocol (HTTP)
+require a feature to do partial resource modification. The existing
+HTTP PUT method only allows a complete replacement of a document.
+This proposal adds a new HTTP method, PATCH, to modify an existing
+HTTP resource.
+
+A PATCH request on the other hand, is used to make changes to part of the resource at a location. That is, it PATCHES the resource — changing its properties. It is used to make minor updates to resources and it’s not required to be idempotent.
+If we continue with our example above, we could easily add a new window to the house on plot 1 without having to ship a whole new house. All we have to do is ship the window and PATCH up the old house with a new window. Below is an example of the payload we’d have to send.
+
+{
+  address: 'plot 1',
+  owner: 'segun',
+  type: 'duplex',
+  color: 'green',
+  rooms: '5',
+  kitchens: '1',
+  windows: 20
+}
+
+--patch request
+{
+  windows: 21
+}
+
+Since PATCH is not idempotent, failed requests are not automatically re-attempted on the network. Also, if a PATCH request is made to a non-existent url e.g attempting to replace the front door of a non-existent building, it should simply fail without creating a new resource unlike PUT, which would create a new one using the payload. Come to think of it, it’ll be odd having a lone door at a house address.
+
+That about sums up the differences and use cases of both HTTP methods.
+Client sends information in the form of 
+1) URI
+2) Headers
+3) Payload -- which format json/xml
+
+Server sends information in the form of 
+1) Status code -
+200 success
+201 created
+404 page not found
+400 Bad request
+500 Internal error
+401 Authentication error
+
+2) Response format - json/xml
+3) message 
+
+API testing is used to check :
+1) API is reliable or not 
+2) API is fast or not
+3) API should meeting security standards like it should only return data to authentic users.
+The actions on the API should be dependent on the API methods like Get: to get the data not to change it etc..
+
+For testing API if we don't have UI so using this tool called Postman which treats as a rest client, we can test APIs
+
+
+Django rest api:
+------------------
+
+We can restrict the API calls to 100 per day in lower envs using throttling in setting.py file of django framework.
+
+For django API token authentication we add:
+1) rest_framework.authtoken
+
+In Django restframework when a client requests a data it should recieve in the form of json 
+hence we use serializer.py file under app folder to supply data in the form of json to client.
+
+In views.py we write business logic about the API i.e the get post put patch delete etc.
+
+create custom url for get , post , patch , delete , put in urls.py in project folder .
+
+Django details:
+---------------
+
+
+Basics of django:
+------------------
+Django:
+-------
+1) Django is a web development framework in python.
+2) Django uses it's own ORM ( object relational mapper) using which it interacts with database.
+3) Default database used is sqllite and has its own templeting language.
+4) Django is based on MVT pattern i.e Model , View and Templete pattern. 
+In a webpage we have 3 important things:
+1) Data 
+2) Layout
+3) Business logic
+
+Model is linked to database .In order to get data from database Model object is used.
+Templetes are html,css,javascript page with DTL (django templete language).
+DTL is used to insert some dynamic data in the templete based. We have place holders in templete 
+which is replaced by data.
+The business logic is written in views which calls model and templete.
+Below is the flow of django:						
+													
+						|----------------->Models ------> Database	
+user -------> django -------> URLs--------> Views 
+						|----------------->Templetes
+
+Templeting language of django:
+--------------------------------
+{% <logic written like loops and if condition> %}
+{{<variable to get dynamic data>}}
+
+
+Django uses the below types of inheritance:
+1) Abstract class inheritance
+In models.py when we create models, if 2 or more models are having same fields then instead of 
+repeating the code we use this inheritance model.Using this we create an abstract class which stores the 
+common fields and then we inherit this class to other classes.
+
+# abstract class
+class ContactInfo(models.Model):
+    name=models.CharField(max_length=100)
+    email=models.CharField(max_length=200)
+    address=models.CharField(max_length=200)
+
+    class Meta:
+        abstract=True
+
+# child class inherits from ContactInfo class.
+class CustomerInfo (ContactInfo):
+    phone=models.CharField(max_length=100)
+
+class Staff(ContactInfo):
+    staffcode=models.CharField(max_length==100)
+
+Only 2 tables will be created/pointed in database CustomerInfo and Staff.
+
+
+2) Multi table inheritance
+This type of inheritance is same as abstract class inheritance but the only difference is that the base class will not be treated as abstract class instead it will also be treated as a table and while makemigrations , a new table will be created in database of base class.
+
+ex:
+
+# base class
+class ContactInfo(models.Model):
+    name=models.CharField(max_length=100)
+    email=models.CharField(max_length=200)
+    address=models.CharField(max_length=200)
+
+# child class inherits from base class
+class CustomerInfo(ContactInfo):
+    phone=models.CharField(max_length=100)
+
+class Staff(ContactInfo):
+    staffcode=models.CharField(max_length==100)
+
+so 3 tables will be created in database ContactInfo,CustomerInfo,Staff
+
+
+3) Proxy model inheritance:
+When two or model seperate screens needs to be build on top of same database table but the functionality is different 
+then we use this type of model inheritance. Here we create a proxy model which is inherited from the main model 
+and under meta class we use to give the columns which needs to be used.
+
+
+Use of middleware:
+1) Session management
+2) User authentication
+3) Cross site request
+
+Features of Django:
+1) Admin part
+2) ORM 
+3) Templeting
+4) Internationalization
+5) Autherization and Authentication
+6) Testing framework
+
+Make migrations and migrate are the 2 commands which we use to run after changing the models.py and database datamodel.
+So any changes in the database or done in the ORM should be migrate so that django can use the latest model and can perform CRUD operation on the database.
