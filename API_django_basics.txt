@@ -1,7 +1,7 @@
 API:
 ----
 
-All the webservices and APIs but not all the APIs are webservices.
+All the webservices are APIs but not all the APIs are webservices.
 The APIs which are called over http and internet.
 Types of Webservices:
 1) SOAP -- Simple object access protocol
@@ -25,7 +25,7 @@ There are various HTTP methods used in Rest API:
 4)  DELETE -- delete
 
 
-Difference between PUT and PATH:
+Difference between PUT and PATCH:
 ---------------------------------
 
 Everything on the internet is considered a resource, has a location (URL) and a corresponding identifier (URI).
@@ -85,9 +85,26 @@ If we continue with our example above, we could easily add a new window to the h
 Since PATCH is not idempotent, failed requests are not automatically re-attempted on the network. Also, if a PATCH request is made to a non-existent url e.g attempting to replace the front door of a non-existent building, it should simply fail without creating a new resource unlike PUT, which would create a new one using the payload. Come to think of it, it’ll be odd having a lone door at a house address.
 
 That about sums up the differences and use cases of both HTTP methods.
+
 Client sends information in the form of 
-1) URI
+1) URI -- this also can have queryset details to get specific resources like:
+		   resource https://mydb-fafc.restdb.io/rest/people?q={"name": "Joe"}
+
 2) Headers
+
+GET /home.html HTTP/1.1
+Host: developer.mozilla.org
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.9; rv:50.0) Gecko/20100101 Firefox/50.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate, br
+Referer: https://developer.mozilla.org/testpage.html
+Connection: keep-alive
+Upgrade-Insecure-Requests: 1
+If-Modified-Since: Mon, 18 Jul 2016 02:36:04 GMT
+If-None-Match: "c561c68d0ba92bbeb8b0fff2a9199f722e3a621a"
+Cache-Control: max-age=0
+
 3) Payload -- which format json/xml
 
 Server sends information in the form of 
@@ -100,6 +117,7 @@ Server sends information in the form of
 401 Authentication error
 
 2) Response format - json/xml
+
 3) message 
 
 API testing is used to check :
@@ -113,6 +131,13 @@ For testing API if we don't have UI so using this tool called Postman which trea
 
 Django rest api:
 ------------------
+ Important parts of Django rest framework:
+ 1) throtling - to restrict the number of users to hit the api
+ 2) authtoken - for authrization of users to hit api
+ 3) urls - to create urls/uris for resources
+ 4) views - to add business logic for get put post patch delete etc..
+ 5) serializer - to generate the data in json for the client to access.
+
 
 We can restrict the API calls to 100 per day in lower envs using throttling in setting.py file of django framework.
 
@@ -165,6 +190,7 @@ Django uses the below types of inheritance:
 In models.py when we create models, if 2 or more models are having same fields then instead of 
 repeating the code we use this inheritance model.Using this we create an abstract class which stores the 
 common fields and then we inherit this class to other classes.
+
 
 # abstract class
 class ContactInfo(models.Model):
