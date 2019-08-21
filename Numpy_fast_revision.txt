@@ -1,0 +1,34 @@
+------------------------------
+------------------------------
+Numpy array basics operations:
+------------------------------
+------------------------------
+
+np.random.rand(4,2) # generate random numpy array of 4,3
+a=np.array(l)
+a.dtype
+a.shape
+a.reshape(3,4) # change shape to 3,4 
+np.linspace(1,2,10) # 10 divisions between 1 and 2
+a.max(),a.min(),a.sum(),a.sqrt() etc ..
+np.zeros(10) # generate numpy array for 10 rows
+np.ones(4) # generate numpy array for 4 rows
+na.sum(axis=0) # sum vertically 
+na.sum(axis=1) # sum horizontally
+na.ravel() # converting any nd arrays into 1 d array.
+np.hstack((na,nb))
+array([[1, 2, 3, 1, 2, 3],
+       [4, 5, 6, 4, 5, 6]])
+np.vstack((na,nb))
+array([[1, 2, 3],
+       [4, 5, 6],
+       [1, 2, 3],
+       [4, 5, 6]])
+
+
+Types of numpy operations:
+1) Broadcasting - which means performing tasks with 2 or more numpy arrays 
+		  like adding 2nd elements of both the arrays etc..
+2) Slicing
+3) Aggrigation 
+4) Vstack , Hstack , Revel
