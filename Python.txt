@@ -1,3 +1,6 @@
+Python:
+-------
+
 Monkey patching:
 ****************
 Monkey patching is the term refers to dynamic modifications of a class or module at run-time.
@@ -127,6 +130,7 @@ def addition(*args):
 
 addition(add(1,3)) # here add is a first class function and addition is a higher order function.
 
+
 Closer functions: The function which wraps another function is called closer functions
 *****************
 def number(a,b):
@@ -140,10 +144,13 @@ Mutable and immutable datatypes in python:
 Mutable- list,dict,sets
 Immutable - int,float,str,tuples,bool
 
+**** dictionary keys can be any immutable datatype. because keys cannot be changed
+
 Namespaces in Python:
 **********************
 Like every language python also maintains the namespaces in the form of python dictionaries.
-A namespace is a system to have a unique name for each and every object in Python. An object might be a variable or a method.
+A namespace is a system to have a unique name for each and every object in Python. An object might be a variable or 
+a method.
 There are 3 types of namespaces:
 1) Inbuit namespaces for inbuild functions like print (__print__(),__str__() etc)
 2) Global namespace for global variables 
@@ -158,6 +165,10 @@ serialization and deserialization using pickle
 
 to convert into serialization: pickle.dump(data,f) # dump data to pickle file
 to convert into deserialization: pickle.load(data,f) # load data from pickle file
+
+Any object in Python can be pickled so that it can be saved on disk. 
+What pickle does is that it “serializes” the object first before writing it to file.
+Pickling is a way to convert a python object (list, dict, etc.) into a character stream
 
 data ={"name":"shobhit","age":28,"phno":[9958766250,9962058544]}
 
@@ -182,6 +193,7 @@ with open("data.pkl","rb") as f:
 
 data
 Out[20]: {'name': 'shobhit', 'age': 28, 'phno': [9958766250, 9962058544]}
+
 
 shallow copy and deep copy 
 *****************************
@@ -209,7 +221,8 @@ memory management in python
 everything in python is an object. There are two types of memory division used by python.
 heap memory 
 stack memory
-The objects are created is in heap memory (like x=5 here 5 is in heap memory) and function execution is in stack memory.
+The objects are created is in heap memory (like x=5 here 5 is in heap memory) and 
+function execution is in stack memory.
 
 
 python compiled or interpreted
@@ -1041,20 +1054,27 @@ output:
 Static and Dynamic type of languages:
 ************************************
 Statically typed languages
-A language is statically typed if the type of a variable is known at compile time. For some languages this means that you as the programmer must specify what type each variable is (e.g.: Java, C, C++); other languages offer some form of type inference, the capability of the type system to deduce the type of a variable (e.g.: OCaml, Haskell, Scala, Kotlin)
+A language is statically typed if the type of a variable is known at compile time. 
+For some languages this means that you as the programmer must specify what type each variable is (e.g.: Java, C, C++); other languages offer some form of type inference, the capability of the type system to deduce the type of a variable (e.g.: OCaml, Haskell, Scala, Kotlin)
 
 The main advantage here is that all kinds of checking can be done by the compiler, and therefore a lot of trivial bugs are caught at a very early stage.
 
 Examples: C, C++, Java, Rust, Go, Scala
 
 Dynamically typed languages
-A language is dynamically typed if the type is associated with run-time values, and not named variables/fields/etc. This means that you as a programmer can write a little quicker because you do not have to specify types every time (unless using a statically-typed language with type inference).
+A language is dynamically typed if the type is associated with run-time values, and not named variables/fields/etc. 
+This means that you as a programmer can write a little quicker because you do not have to specify types every time 
+(unless using a statically-typed language with type inference).
 
 Examples: Perl, Ruby, Python, PHP, JavaScript
 
-Most scripting languages have this feature as there is no compiler to do static type-checking anyway, but you may find yourself searching for a bug that is due to the interpreter misinterpreting the type of a variable. Luckily, scripts tend to be small so bugs have not so many places to hide.
+Most scripting languages have this feature as there is no compiler to do static type-checking anyway,
+ but you may find yourself searching for a bug that is due to the interpreter misinterpreting the type of a variable. 
+ Luckily, scripts tend to be small so bugs have not so many places to hide.
 
-Most dynamically typed languages do allow you to provide type information, but do not require it. One language that is currently being developed, Rascal, takes a hybrid approach allowing dynamic typing within functions but enforcing static typing for the function signature.
+Most dynamically typed languages do allow you to provide type information, but do not require it.
+ One language that is currently being developed, Rascal, takes a hybrid approach allowing dynamic typing 
+ within functions but enforcing static typing for the function signature.
 
 
 No interfaces in Python:
@@ -1149,7 +1169,8 @@ Country changed: US
 Getter and setter methods are used in python in order to follow data encapsulation principles.
 Getter methods are used to get the values of varibles and functions which are private in class
 and setter methods are used to set the values of private variables using setter methods, we cannot change the
-values of private variables directly using object. Getter and setter methods protect the class variables and methods to be changed.
+values of private variables directly using object. Getter and setter methods protect the class variables
+and methods to be changed.
 
 First class functions:
 ************************
@@ -1296,284 +1317,6 @@ print("hello") -- in python 3
 3) In python 2 we use <> for not equals to where as we use != in python 3 for not equals to.
 
 4) In python 2 we use range which return List of values where as in python 3 we use range which returns range object.
-
-
-Numpy:
-******
-Numpy is a numerical computation library in python using which we can create multidimensional
-arrays. Also this library is very fast. In normal python code if we run a loop so for performing 
-any operation everytime python checks the type of variable 
-(ex: to add integers it check the variable type and calls interger class method __add__()
- where as in other static typed languages we already give datatype to a variable which
-skips type checking so they are fast).
-
-Numpy uses less memory
-
-So, numpy is fast because it helps us to perform operations which we perform using looping
-without using numpy.
-
-ex:1
-a=[1,2,4,5,7,8]
-[i+4 for i in a] # here looping is done on every element to add 4 to every element.
-
-import numpy as np
-b=np.array(a)
-b+4  # no looping done using numpy , actually it's pusing down the looping to the compiled code of numpy where type checking is done once.
-
-Arithematical,bitwise,comparision,trignometric and other scientific functions are called as ufuncs
-in numpy
-
-ex2: performing aggrigation on numpy arrays are faster like np.min(),np.max(),np.sum() etc...
-
-ex3: performing fancy indexing in numpy.
-
-l=[1,3,4,5,6]
-in python to find the 2,4,3 index elements of a list we need to write logic to find the values and concat to create a new list,
-this can be done very easily in numpy.
-
-a=np.array(l)
-indx=[2,4,3]
-a[indx]
-
-output:
---------
-array([5, 8, 7])
-
-ex4: we can use broadcasting multiple arrays in numpy i.e combining multiple arrays of different 
-dimensions where in python it would be very hard.
-
-Below are the commonly used concepts of numpy array:
-----------------------------------------------------
-
-import numpy as np
-
-'''
-a=[1,2,3,4]
-b=[5,5,5.5,9]
-
-x=np.array(a) # this will create numpy array from normal list
-y=np.array(b) # this will create numpy array from normal list
-print(x/y**2)
-
-#print (a*b); -- this will give error because lists cannot do calculations.
-
-print(x+y)  # this will do addition of elements , numpy array
-print(a+b) # this will add element of both the list , simple python lists
-
-print (x[2])
-print (a[2])
-
-print (type (x)) # this will show x is numpy array
-print (type (a)) # this will show a is a list
-
-print (np.shape(x)) # this show the columns and rows of x
-
-# n dimensional arrays
-
-#2 dimensional arrays
-
-array1=(
-        [1,2,3],
-        [4,5,"6"]
-        )
-xx= np.array(array1)
-print (np.array(array1))
-# the above array elements are converted to string as numpy array can only store 1 type of elements
-
-array2 = (
-          [1.2,3,4],
-          [5.2,2.2,8.1]
-         )
-yy = np.array(array2)
-print (np.array(array2))
-#the above array elements are converted to float as numpy array can only store 1 type of elements
-
-print (np.shape (xx)) # (2,3) two rows and each row with 3 elements
-
-#print (array2[0][2])
-#print array2[0,2] # this format for printing is not supported in list , it will throw error
-print (yy[0,2]) # this is supported in numpy array , it will work
-
-
-print ('# calculations')
-
-a = (
-    [1, 2, 3],
-    [4, 5, 6]
-    )
-
-b = ( 
-    [1, 2, 3],
-    [4, 5, 6]
-    )
-
-x = np.array(a)
-y = np.array(b)
-
-print(x * y)
-
-print ((x[:,1])+(y[:,1]))
-print ((x[1,:]) +(y[1,:]))
-
-
-print ('\n\n\n\n')
-
-# random number generation by using Numpy
-
-
-random1= np.random.rand(5)
-random2 = np.random.rand(5,1)
-'''
-
-
-a = [1,3,4]
-size = sys.getsizeof(a)*len(a)
-print (size)
-
-na = np.array(a)
-print (na)
-print (type(na))
-print (na.size)
-print (na.itemsize)
-nsize = na.size*na.itemsize
-print (nsize)
-
-na1 = np.random.rand(3,2)
-print (na1)
-print (na1.shape)
-print(na1.ndim)
-print (na1.dtype)
-
-print(na1.size)
-print(na1.itemsize)
-
-x= [[1,2,3],
-    [4,5,6]]
-
-xx = np.array(x)
-print (xx)
-print (x)
-
-xxy = xx.reshape(3,2)
-print (xxy)
-
-
-random_var= np.random.rand(3,4)
-print (random_var)
-re_random_var = random_var.reshape(4,3)
-print (re_random_var)
-
-####################################
-#slicing
-na = np.array(
-                [
-                    [1,2,3]
-                    ,[4,5,6]
-                    ,[6,7,8]
-                ]
-             )
-print (na)
-print ('\n')
-print (na[0:2,1])
-
-# linespace
-m = np.linspace(1,3,5)
-print (m)
-
-
-# min,max,sum,sum_axis,sqrt,mean,standard_derviation
-
-print(m.min())
-print(m.max())
-print(m.sum())
-
-print (na,'\n')
-print (na.sum(axis = 0))
-print (na.sum(axis =1))
-
-print (np.sqrt(na))
-print (np.mean(na))
-print (np.std(na))
-
-# vstack, hstack , revel
-''' revel is converting nd numpy array into 1d array '''
-
-nb=na
-print (na,'\n')
-print (nb,'\n')
-
-print ('vstack:\n',np.vstack((na,nb)))
-print ('hstack:\n',np.hstack((na,nb)))
-print ('Ravel:\n',np.ravel(na))
-
-# Mathematical func
-
-print(np.sin(na))
-x =90
-print (np.sin(x)) # value in degree
-print (np.sin(np.deg2rad(x))) # value in radian
-
-print (np.cos(0))
-print (np.cos(np.deg2rad(0)))
-
-print (np.tan(45))
-print (np.tan(np.deg2rad(45)))
-
-print (np.pi)
-
-print (np.log10(na))
-print (np.log(na))
-
-print (np.exp(na))
-
-
-## creating array using dtype
-a = [1,2,3]
-
-print ( np.array(a,dtype=np.float32))
-print (np.array(a,dtype= np.complex_))
-print (np.array(a,dtype= np.bool_))
-print (np.array(a,dtype= np.str_))
-
-# zeros array:
-z = np.zeros([4])
-print (z)
-
-z[1]=10
-z[2]=-8
-print (z)
-
-# creating array from other array with different datatype
-a = np.arange(0,12,2)
-print (a)
-a1 = np.array(a,dtype = np.complex_)
-print (a1)
-
-
-a1 = np.array([[1, 2, -4], [3, -1, 5]])
-a2 = np.array([[6, -3], [1, -2]])
-
-# if equation is
-# x+2y =1
-# 2x -y =2
-#find x and y
-
-coff = np.array([[1,2],[2,-1]])
-cons = np.array([1,2])
-sol = np.linalg.solve(coff,cons)
-print (sol)
-
-To remove a file in python:
-***************************
-os.remove(filename)
-
-To generate random number in python:
-*************************************
-np.random.rand()
-OR
-random.random()
-
-
 
 
 
@@ -1794,3 +1537,361 @@ a.swapcase()
 'hELLO'
 
 l.reverse() # to reverse the list
+
+
+
+
+-------------------------
+-------------------------
+-------------------------
+-------------------------
+
+
+#Basics of Python:
+'''
+1) PEDMAS ( paranthesis , exponential , division , multiplication , addition and substraction )
+2) ~x= -(x+1)
+3) cmp(x,y) -- if x>y then 1; if x=y then 0; if x<y then -1
+4)r"\nhello" -- op is \nhello because r treats the characters as raw characters
+5) 
+>>>example = "helle"
+>>>example.rfind("e") # op 4 i.e it returns the highest value of index; here e has index values as 1 and 4 so highest is 4
+6)
+>>>example="helloworld"
+>>>example[::-1].startswith("d") # op is true because startswith checks the word and if letter starts with d so true
+7)string.capitalize : It makes the first letter of string as capitalize
+8)s='123456' so s.center(12)---> '   123456   ' i.e it places the string in the center
+9)s.endswith('aaa') # op is True if s ends with aaa else False
+10)
+elements=['foo','bar','baz']
+for count, elem in enumerate(elements, 42):
+     print count, elem
+
+output:
+*******
+42 foo
+43 bar
+44 baz
+
+
+'''
+
+# write,append,read from file#
+x=open('C:\\Users\\SHOBHIT\\Downloads\\test.txt','w')
+x.write('hello')
+x.close()
+
+x=open('C:\\Users\\SHOBHIT\\Downloads\\test.txt','a')
+x.write('\nhello')
+x.close()
+
+x=open('C:\\Users\\SHOBHIT\\Downloads\\test.txt','r')
+print(x.read())
+x.close()
+# write,append,read from file#
+
+# code in file x
+# if the file is execute directly so __name__='__main__' but if the file is imported into another file then __name__='name of file'
+def fx():
+	print('using fx of x file')
+
+if __name__=='__main__':
+	print('The file is used directly')
+else:
+	print('The file is imported')
+	
+# code in y
+
+print('i am in file y')
+import x
+x.fx()
+print('The values above are from x file')
+
+# Gist of the above code is:
+# __name__='__main__' when the file is executed directly but __name__!='__main__' when the file is imported.
+
+
+#read a csv file in python
+with open('C:\\Users\\SHOBHIT\\Downloads\\sample_csv.csv') as csvfile:
+     data=csv.reader(csvfile,delimiter='|')
+      for rows in data:
+       print(rows)
+
+#os commands
+import os
+os.getcwd()
+os.mkdir('dir1')
+os.rename('dir1','dir2')
+os.rmdir('dir2')
+os.chdir('<path>')
+os.listdir()	
+
+#time commands
+import time 
+time.sleep(2)
+
+# Break and continue statements:
+#********************************
+
+a= 'python'
+>>> for i in a:
+	if i=='y':
+		break
+	print(i)	
+O/P:
+****
+p
+
+
+>>> for i in a:
+	if i=='o':
+		continue
+	print(i)	
+O/P:
+****
+p
+y
+t
+h
+n
+
+
+
+
+'''
+The below is most important. We can pass parameters to a script using the below.
+If the script name is abc.py then we can use python abc.py param1,param2,param3
+'''
+
+import sys
+x=(sys.argv)
+print(x)
+if x[1] == 'shobhit':
+ print ('hello admin')
+else:
+ print('You are not admin')
+
+ # FTP using python
+from ftplib import FTP
+
+ftp=FTP('domain_name.com')
+ftp.login(user='username',passwd='password')
+ftp.cwd('location from where file can be picked')
+
+def grabfile:
+	filename='test.txt'
+	localfile=open(filename,'wb')
+	ftp.retrbinary('RETR '+filename,localfile.write,1042)
+	ftp.quit()
+	localfile.close()
+
+def placefile:
+	filename='test.txt'
+	ftp.storbinary('STOR '+filename,open(filename,'rb'))
+	ftp.quit()
+
+ # Python pickle module
+'''Its serialization and deserialization model 
+which converts python objects into byte stream and back again.'''
+'''Pickling object'''
+import pickle
+obj=[1,2,3,4]
+x=open('pickled_obj_file.pickle','wb')
+pickle.dump(obj,x)
+x.close()
+
+'''Depickling object'''
+y=open('pickled_obj_file.pickle','rb')
+obj1=pickle.load(y)
+''' Both obj and obj1 will be same '''
+
+# how to convert list of strings in number l=['1','2','3','4']
+[int(i) for i in l]
+
+
+#get the sysdate in python 
+import datetime as dt
+a=st.datetime.now()
+a.strftime("%Y%M%D %H%M%S") #YYMMDD hhmiss
+a.strftime("%Y%m%d %H%M%S") # yyyymmdd hhmiss
+
+# to get the documentation:
+print(func.__doc__)
+
+# to print calender of given month and year:
+import calendar
+y=input('Enter the year:')
+m=input('Enter the month:')
+print(calendar.month(int(y),int(m)))
+
+# to get the time in seconds to calculate start and end time of process
+a=time.time()
+b=time.time()
+print(b-a)
+
+
+# deep copy and shallow copy:
+# shallow copy
+In case of shallow copy the reference of object or the address of object is copied to another object.
+l1=[1,2,3]
+l2=copy.copy(l1)
+now the values are not copied in l2 from l1. Instead the address where the values of l1 is stored is copied to l2. So if
+we do any change in l2.. that will be reflected in l1.
+
+# deep copy
+import copy
+l1=[1,2,3,4]
+l2=copy.deepcopy(l1)
+
+now l2 is [1,2,3,4]
+now changing l2 i.e l2.append(5)
+
+l2=[1,2,3,4,5]
+The concept is that the changes which are made on l2 will not impact l1.. this is called deep copy
+In deep copy the copy of object l1 is created and is assigned to l2. So if l2 changes then the changes will be done on the copy. 
+Not on l1.
+
+# Inheritance:
+This is the concept to make code reusable. There are two classes.. parent class (super class) and child class.
+Child class can use all the members of parent class.
+1) single inheritance --> c1 gets all the features from p1 parent class
+2) multiple inheritance --> c1 gets the features from p1 and p2 parent class. 
+3) multilevel inheritance --> c1 gets from p1 and c2 gets from c1.
+
+# memory allocation in python
+There is a concept of memory heap in python.All the datastructures and objects are stored in the memory heap.
+And garbage collector is used to free up the space so that it can be allocated to memory heap.
+
+# to count the number of upper cases in  a file:
+ with open('filename.txt') as file:
+ count=0
+ text=file.read()
+ for i in text:
+  if i.isupper==True
+	count=count+1
+
+
+# *argv and **kargv 
+# argv
+in a function if we are not sure about the number of arguments to be passed then we use argv
+syntax:
+
+def func1(name,*argv)
+	print('name is '+name)
+	for i in argv:
+	 print ('\nthe arguments passed are :'+i)
+
+func1('Shobhit','x','y','z')
+op:
+name is shobhit
+the arguments passed are x
+the arguments passed are y
+the arguments passed are z
+
+#Kargv
+The use of this keyword is to identify the key value pair passed in a function
+
+def func1(name,**kargv)
+	print('name is'+name)
+	if kargv is not None:
+	  for key,value in kargv.iteritems():
+		print ('key and values are:'+key+' '+value)
+
+# shuffle a list in python 
+from random import shuffle
+l=[1,2,3,4,5,6]
+shuffle(l)
+print(l)
+op:
+[2,3,1,6,5,4]
+
+# Generate a random number:
+import random
+print(random.random())
+
+
+########List comprehension ( sets,tupples,list,dict)########
+
+x=range(0,11)
+
+#example 1:
+l=[i for i in x if i%2==0]
+
+#example 2:
+letter='abc'
+op=[(let,num) for let in letter for num in x]
+
+# dictionary comprehension
+'''normal'''
+
+l=[1,2,3,4,5]
+lx=['name','class','teacher','school','location']
+dict={}
+for i,j in zip(l,lx):
+	dict[i]=j
+
+'''dict comprehension'''
+dict1={i:j for i,j in zip(l,lx)}
+
+# filtering in dict comprehension:
+dict1={i:j for i,j in zip(l,lx) if (i>1 and i<5)}
+
+# set comprehension
+l = [1,1,1,11,1,1,1,1,1,1,2,4,3,3,3,3,33,3,4,4,4,4,4,4,7,7,7,7]
+p={i for i in l}
+
+# generators:
+''' 
+ Generators are python object which helps us in speedup the performance of program and it takes
+ very less memory as compared to other data structures(like list,dictionaries etc) because the all the computed values 
+ are not present in the memory. When it is required then it goes into the memory. 
+ The best example of generators are the processing of values and storing in a list one by one by appending in the list
+ Here the memory consumption by the list which stores all the values are more and the time to process the list elements
+ are also more. To reduce this we have generators in place.
+ '''
+
+# The below function gives the square of numbers and store as a list.
+def func(values):
+	l=[i*i for i in values] # concatenation
+	return l
+# calling fnc
+p=func([1,2,4,5])
+print('function1:',list(p))
+
+#### using generators
+def func(values):
+	l=yield(i*i for i in values) # storing as generators
+	return l
+
+p=func([1,2,4,5])
+# getting the values:
+for i in next(p): # here next keyword is used to load next element's result in memory 
+	print(i)
+
+#### Iterators
+''' 
+These are the build in functions which help to execute the loops in python and process each element one by one.
+The function is obj=iter(<string|number|char|list|tupple|dictionaries>)
+here to get to the next element we use next(obj)
+There is a reverse iterator present which is obj = reversed(<string|number|char|list|tupple|dictionaries>)
+here to get to the next element we use next(obj)
+'''
+
+s= ['hello','world']
+for i in s:
+	print(i)
+print(dir(s)) # this will show the __iter__ method which is doing iterations
+
+obj= iter(s)
+print('\n',obj) # it shows iterator object created at some address.
+
+# to get the next element we use 
+print('Forward iteration :')
+print(next(obj)) # hello
+print(next(obj)) # world
+#print(next(obj)) # StopIteration
+
+print('reversed iteration :')
+reverseobj= reversed(s)
+print(next(reverseobj)) # world
+print(next(reverseobj)) # hello
