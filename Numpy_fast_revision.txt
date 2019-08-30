@@ -4,6 +4,14 @@ Numpy array basics operations:
 ------------------------------
 ------------------------------
 
+Numpy is used for numerical computation in python. It is an equivalent to list in python but numpy is much more faster and takes less space, also for scientific calculation there are many inbuilt functions in numpy
+which can be used for linear alzebra and other operations.Numpy is used to create multidimensional array and used to perform operations on that.
+
+Numpy is written on top of highly optimized C code and performs matrix operations in the form of vectorization,
+this makes the processing much more faster than the conventional looping processing which is done on lists.
+
+Numpy is homogenious data structures and not like list which is hetrogenious structures so the type checking done in python list is not done in numpy at a very extensive level.
+
 np.random.rand(4,2) # generate random numpy array of 4,3
 a=np.array(l)
 a.dtype
