@@ -342,7 +342,7 @@ execution space which uses the multiple cpu cores to execute the program.
 
 functional programming:
 ***********************
-lamba expressions are ananamous functions with no name. op=lambda x,y,z: print('3x+2y+3z is :',3*x+2*y+3*z)
+lamba expressions are ananamous functionnctions with no name. op=lambda x,y,z: print('3x+2y+3z is :',3*x+2*y+3*z)
 
 Map function:
 --------------
@@ -1310,6 +1310,11 @@ x=input()
 print('The entered value is :',x)
 print('The evaluated values is:',eval(x))
 
+x=input() # the input given is sho
+print(x)
+sho=1
+print(eval(x))
+
 2) In python 2 print is a statement where as in python 3 print is a function.
 print "hello" -- in python 2
 print("hello") -- in python 3
@@ -1413,102 +1418,6 @@ Shuffle a list:
 random.shuffle(l)
 
 
-Basics of django:
-------------------
-Django:
--------
-1) Django is a web development framework in python.
-2) Django uses it's own ORM ( object relational mapper) using which it interacts with database.
-3) Default database used is sqllite.
-4) Django is based on MVT pattern i.e Model , View and Templete pattern. 
-If a webpage we have 3 important things:
-1) Data 
-2) Layout
-3) Business logic
-
-Model is linked to database .In order to get data from database Model object is used.
-Templetes are html,css,javascript page with DTL (django templete language).
-DTL is used to insert some dynamic data in the templete based. We have place holders in templete 
-which is replaced by data.
-The business logic is written in views which calls model and templete.
-Below is the flow of django:						
-													
-						|----------------->Models ------> Database	
-user -------> django -------> URLs--------> Views 
-						|----------------->Templetes
-
-
-
-
-
-Django uses the below types of inheritance:
-1) Abstract class inheritance
-In models.py when we create models, if 2 or more models are having same fields then instead of 
-repeating the code we use this inheritance model.Using this we create an abstract class which stores the 
-common fields and then we inherit this class to other classes.
-
-# abstract class
-class ContactInfo(models.Model):
-    name=models.CharField(max_length=100)
-    email=models.CharField(max_length=200)
-    address=models.CharField(max_length=200)
-
-    class Meta:
-        abstract=True
-
-# child class inherits from ContactInfo class.
-class CustomerInfo (ContactInfo):
-    phone=models.CharField(max_length=100)
-
-class Staff(ContactInfo):
-    staffcode=models.CharField(max_length==100)
-
-Only 2 tables will be created/pointed in database CustomerInfo and Staff.
-
-
-2) Multi table inheritance
-This type of inheritance is same as abstract class inheritance but the only difference is that the base class will not be treated as abstract class instead it will also be treated as a table and while makemigrations , a new table will be created in database of base class.
-
-ex:
-
-# base class
-class ContactInfo(models.Model):
-    name=models.CharField(max_length=100)
-    email=models.CharField(max_length=200)
-    address=models.CharField(max_length=200)
-
-# child class inherits from base class
-class CustomerInfo(ContactInfo):
-    phone=models.CharField(max_length=100)
-
-class Staff(ContactInfo):
-    staffcode=models.CharField(max_length==100)
-
-so 3 tables will be created in database ContactInfo,CustomerInfo,Staff
-
-
-3) Proxy model inheritance:
-When two or model seperate screens needs to be build on top of same database table but the functionality is different 
-then we use this type of model inheritance. Here we create a proxy model which is inherited from the main model 
-and under meta class we use to give the columns which needs to be used.
-
-
-Use of middleware:
-1) Session management
-2) User authentication
-3) Cross site request
-
-Features of Django:
-1) Admin part
-2) ORM 
-3) Templeting
-4) Internationalization
-5) Autherization and Authentication
-6) Testing framework
-
-Make migrations and migrate are the 2 commands which we use to run after changing the models.py and database datamodel.
-So any changes in the database or done in the ORM should be migrate so that django can use the latest model and can perform CRUD operation on the database.
-
 
 String functions:
 -----------------
@@ -1539,10 +1448,6 @@ a.swapcase()
 l.reverse() # to reverse the list
 
 
-
-
--------------------------
--------------------------
 -------------------------
 -------------------------
 
@@ -1671,43 +1576,6 @@ if x[1] == 'shobhit':
 else:
  print('You are not admin')
 
- # FTP using python
-from ftplib import FTP
-
-ftp=FTP('domain_name.com')
-ftp.login(user='username',passwd='password')
-ftp.cwd('location from where file can be picked')
-
-def grabfile:
-	filename='test.txt'
-	localfile=open(filename,'wb')
-	ftp.retrbinary('RETR '+filename,localfile.write,1042)
-	ftp.quit()
-	localfile.close()
-
-def placefile:
-	filename='test.txt'
-	ftp.storbinary('STOR '+filename,open(filename,'rb'))
-	ftp.quit()
-
- # Python pickle module
-'''Its serialization and deserialization model 
-which converts python objects into byte stream and back again.'''
-'''Pickling object'''
-import pickle
-obj=[1,2,3,4]
-x=open('pickled_obj_file.pickle','wb')
-pickle.dump(obj,x)
-x.close()
-
-'''Depickling object'''
-y=open('pickled_obj_file.pickle','rb')
-obj1=pickle.load(y)
-''' Both obj and obj1 will be same '''
-
-# how to convert list of strings in number l=['1','2','3','4']
-[int(i) for i in l]
-
 
 #get the sysdate in python 
 import datetime as dt
@@ -1730,38 +1598,6 @@ b=time.time()
 print(b-a)
 
 
-# deep copy and shallow copy:
-# shallow copy
-In case of shallow copy the reference of object or the address of object is copied to another object.
-l1=[1,2,3]
-l2=copy.copy(l1)
-now the values are not copied in l2 from l1. Instead the address where the values of l1 is stored is copied to l2. So if
-we do any change in l2.. that will be reflected in l1.
-
-# deep copy
-import copy
-l1=[1,2,3,4]
-l2=copy.deepcopy(l1)
-
-now l2 is [1,2,3,4]
-now changing l2 i.e l2.append(5)
-
-l2=[1,2,3,4,5]
-The concept is that the changes which are made on l2 will not impact l1.. this is called deep copy
-In deep copy the copy of object l1 is created and is assigned to l2. So if l2 changes then the changes will be done on the copy. 
-Not on l1.
-
-# Inheritance:
-This is the concept to make code reusable. There are two classes.. parent class (super class) and child class.
-Child class can use all the members of parent class.
-1) single inheritance --> c1 gets all the features from p1 parent class
-2) multiple inheritance --> c1 gets the features from p1 and p2 parent class. 
-3) multilevel inheritance --> c1 gets from p1 and c2 gets from c1.
-
-# memory allocation in python
-There is a concept of memory heap in python.All the datastructures and objects are stored in the memory heap.
-And garbage collector is used to free up the space so that it can be allocated to memory heap.
-
 # to count the number of upper cases in  a file:
  with open('filename.txt') as file:
  count=0
@@ -1769,41 +1605,6 @@ And garbage collector is used to free up the space so that it can be allocated t
  for i in text:
   if i.isupper==True
 	count=count+1
-
-
-# *argv and **kargv 
-# argv
-in a function if we are not sure about the number of arguments to be passed then we use argv
-syntax:
-
-def func1(name,*argv)
-	print('name is '+name)
-	for i in argv:
-	 print ('\nthe arguments passed are :'+i)
-
-func1('Shobhit','x','y','z')
-op:
-name is shobhit
-the arguments passed are x
-the arguments passed are y
-the arguments passed are z
-
-#Kargv
-The use of this keyword is to identify the key value pair passed in a function
-
-def func1(name,**kargv)
-	print('name is'+name)
-	if kargv is not None:
-	  for key,value in kargv.iteritems():
-		print ('key and values are:'+key+' '+value)
-
-# shuffle a list in python 
-from random import shuffle
-l=[1,2,3,4,5,6]
-shuffle(l)
-print(l)
-op:
-[2,3,1,6,5,4]
 
 # Generate a random number:
 import random
@@ -1839,59 +1640,3 @@ dict1={i:j for i,j in zip(l,lx) if (i>1 and i<5)}
 # set comprehension
 l = [1,1,1,11,1,1,1,1,1,1,2,4,3,3,3,3,33,3,4,4,4,4,4,4,7,7,7,7]
 p={i for i in l}
-
-# generators:
-''' 
- Generators are python object which helps us in speedup the performance of program and it takes
- very less memory as compared to other data structures(like list,dictionaries etc) because the all the computed values 
- are not present in the memory. When it is required then it goes into the memory. 
- The best example of generators are the processing of values and storing in a list one by one by appending in the list
- Here the memory consumption by the list which stores all the values are more and the time to process the list elements
- are also more. To reduce this we have generators in place.
- '''
-
-# The below function gives the square of numbers and store as a list.
-def func(values):
-	l=[i*i for i in values] # concatenation
-	return l
-# calling fnc
-p=func([1,2,4,5])
-print('function1:',list(p))
-
-#### using generators
-def func(values):
-	l=yield(i*i for i in values) # storing as generators
-	return l
-
-p=func([1,2,4,5])
-# getting the values:
-for i in next(p): # here next keyword is used to load next element's result in memory 
-	print(i)
-
-#### Iterators
-''' 
-These are the build in functions which help to execute the loops in python and process each element one by one.
-The function is obj=iter(<string|number|char|list|tupple|dictionaries>)
-here to get to the next element we use next(obj)
-There is a reverse iterator present which is obj = reversed(<string|number|char|list|tupple|dictionaries>)
-here to get to the next element we use next(obj)
-'''
-
-s= ['hello','world']
-for i in s:
-	print(i)
-print(dir(s)) # this will show the __iter__ method which is doing iterations
-
-obj= iter(s)
-print('\n',obj) # it shows iterator object created at some address.
-
-# to get the next element we use 
-print('Forward iteration :')
-print(next(obj)) # hello
-print(next(obj)) # world
-#print(next(obj)) # StopIteration
-
-print('reversed iteration :')
-reverseobj= reversed(s)
-print(next(reverseobj)) # world
-print(next(reverseobj)) # hello
