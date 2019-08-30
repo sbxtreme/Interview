@@ -253,3 +253,11 @@ Features of Django:
 
 Make migrations and migrate are the 2 commands which we use to run after changing the models.py and database datamodel.
 So any changes in the database or done in the ORM should be migrate so that django can use the latest model and can perform CRUD operation on the database.
+
+In django to use token authentication below are the steps:
+1) install django rest framework and add the entries in settings.py file under installed apps.
+2) add the permisssion classes in REST_FRAMEWORK entry in settings.py file
+3) use these authentication and permission classes in the functions created in views for GET,PUT,POST etc methods.
+4) use postman to login to test the API.
+5) once login is done a response will be returned which will be as a token.
+6) use token to hit the API.
