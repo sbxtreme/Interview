@@ -1,0 +1,40 @@
+#! /bin/bash - this is called shebang which is use to tell the program which interpreter to use
+Types of common shells:
+------------------------
+1) Bash 
+2) Ksh
+3) sh
+
+man -- to know about the commands
+ls -ltr -- to list the files based on time and restrictions
+cat filename -- to read the file
+cat > filename -- to write a file
+cat >> filename -- to append in a file
+view filename -- to view the contents of a file in readonly mode
+touch filename -- to create a 0 byte file
+rm -f filename -- to remove a file
+rm -rf directory name -- to remove a directory if files are present in it
+mkdir directory name -- to create a directory
+rmdir directory name -- to remove the directory if it's empty
+df -h -- to know the space on the server
+chmod +x, -x filename  -- to give/remove the permissions on a file
+ls -al -- to view hidden files
+cd ~ -- to go to home
+ls -xl -- to display the files in decending order
+/dev/null -- a location in linux to dump the stdout which needs to be distroyed
+ow-gr-oth -- owner-group-otherusers (_rwx-rwx-rwx,drwx-rwx-rwx,lrwx-rwx-rwx) ; here _ means files , d means directories and l means softlinks
+cat c1.txt c2.txt > c3.txt -- write the content of 2 files in third file
+alais cls=clear -- to set alias in .profile and do source .profile
+more filename -- to see big fiel
+split -100 filename new_filenamepatten -- to split a big file into multiple files and each file will have 100 rows
+sort filename -- to sort a file
+diff file1 file2 > file3  -- to file different between 2 files and write the difference in 3rd file
+ls -ltr | tail -1 -- latest file
+ls -ltr | head -2 -- oldest file
+head -2 file_1 -- first2 lines of a file
+tail -2 file_1 -- last 2 lines of a file
+uniq filename -- to remove duplicates
+grep <wordtofind> "filename" -- to find a word in a file
+sed -n 17p filename -- to get 17th row from a file
+awk -F ',' '{ print $3 }' yourfile.txt -- toget 3rd column of a file
+cut -c 1-8 filename -- to cut the characters from 1 to 8 from a file
