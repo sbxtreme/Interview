@@ -1,0 +1,51 @@
+Pandas:
+---------
+
+read_csv
+df.info
+type
+df.columns
+df['city']=s['cityname']+:+s['ccode']
+pd.DataFrame([dictionary],columns=[columns],index=[index]})
+pd.DataFrame(np.array(l))
+pd.concat(df1,df2,axis=1) # concat based on index |+|
+pd.concat(df1,df2,axis=1) # concat based on index ___
+												   +
+												  ___
+
+df.colname.str.upper()
+df.colname.str.contains('abc') # like operation in sql
+df.loc[rows with conditions, columns]
+ufo.loc[ufo.State=='NY',['City','Shape Reported']]
+ufo.drop(['Time'],axis=1) # drop a column
+drinks.groupby('continent').beer_servings.agg(['max','min','mean','std','count'])
+movies.star_rating.sort_values(ascending=False)
+movies.sort_values(['genre','star_ratings'])
+movies.star_rating.duplicated().sum()
+movies.duplicated().sum()
+star_ratings.drop_duplicates(keep='first') # keep first row and drops all
+star_ratings.drop_duplicates(keep='last') # keep last row and drops all 
+star_ratings.drop_duplicates(keep=False)  # drops all the rows 
+movies.content_ratings.isnull()
+drinks.index.name='CON'
+drinks.reset_index(inplace=True)
+df.genre.value_counts()
+
+Drama        278
+Comedy       156
+Action       136
+Crime        124
+Biography     77
+Adventure     75
+Animation     62
+Horror        29
+Mystery       16
+
+df.genre.unique()
+df.dropna(how='any') # if any of the rows has any value as NaN then drop the complete row
+df.dropna(how='all') # if all the values in a rows is NaN then drop the that row.
+ufo['Colors Reported'].fillna('NULL VALUE',inplace=True)
+ufo.rename(columns={'Colors Reported':'Colors_reported','Shape Reported':'Shape_reported'},inplace=True)
+ufo.columns=ufo.columns.str.replace('','_')
+drinks.continent=drinks.continent.astype('category') # speed up pandas
+pd.merge(df1,df2, on= key, how=left) # joins in pandas example
