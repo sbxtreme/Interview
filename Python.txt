@@ -1,6 +1,19 @@
 Python:
 -------
 
+Process very large csv file in python without getting memory error:
+-------------------------------------------------------------------
+
+# The below program will read large csv file and breaks it into chunks for processing
+import pandas as pd
+batch=1
+for file in pd.read_csv('file.csv',chunksize=50000,engine='python'):
+    filename='file_'+str(batch)+'.csv'
+    file.to_csv(filename,index=False)
+    batch+=1
+print('Files divided into chunks!')
+
+
 Monkey patching:
 ****************
 Monkey patching is the term refers to dynamic modifications of a class or module at run-time.
