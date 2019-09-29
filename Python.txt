@@ -1,3 +1,8 @@
+Python:
+-------
+
+Process very large csv file in python without getting memory error:
+-------------------------------------------------------------------
 # The below program will read large csv file and breaks it into chunks for processing
 import pandas as pd
 batch=1
@@ -6,3 +11,1644 @@ for file in pd.read_csv('file.csv',chunksize=50000,engine='python'):
     file.to_csv(filename,index=False)
     batch+=1
 print('File divided into {0} chunks!'.format(batch))
+
+
+Monkey patching:
+****************
+Monkey patching is the term refers to dynamic modifications of a class or module at run-time.
+Below is an example:
+
+There are 2 files
+1) file.py which containts the below code:
+class Monkey:
+    def funcs(self):
+        print('the funcs is from file module')
+
+2) monkey.py which contains the below code:
+import file
+def monkey_patching(self):
+    print('the funcs is called from monkey patching')
+
+print(' Executing function before monkey patching\n','-'*40)
+m=file.Monkey() # creating object of Monkey class present in file module
+m.funcs() # calling method of Monkey class present in file module
+
+file.Monkey.funcs=monkey_patching # done monkey patching
+
+m=file.Monkey()
+print(' \n Executing function after monkey patching\n','-'*40)
+m.funcs()
+
+
+Output:
+-------
+ Executing function before monkey patching
+ ----------------------------------------
+the funcs is from file module
+ 
+ Executing function after monkey patching
+ ----------------------------------------
+the funcs is called from monkey patching
+
+
+*args and **kargs in python:
+*****************************
+1) *args: this accepts multiple arguments in a function/method. args accepts the values as a tuple
+print(args)
+(1,34,5,6,7,8,8,99,2)
+
+ex1:
+def sum(*args):
+    c=0
+    for i in args:
+        c=c+i
+    print(c)
+    
+    
+sum(1,34,5,6,7,8,8,99,2)
+
+ex2:
+def sum(*args):
+    print(args)
+    sum1=0
+    for i in args:
+        for j in i:
+            sum1=sum1+j
+        print(sum1)
+    
+    
+l=[1,3,4,6,6]
+l1=[6,7,8,9]    
+sum(l1,l)
+
+output:
+*******
+([6, 7, 8, 9], [1, 3, 4, 6, 6])
+30
+50
+
+
+2) **kargs: This is used when we want to pass the values in a function with keys without defining the number/name of arguments.
+
+def person(**kargs):
+    print(kargs)
+    for k,v in kargs.items():
+        print(k,':',v)
+
+person(name='shobhit',place='ggn',tech='python',mob='97328688405296')
+
+output:
+-------
+{'name': 'shobhit', 'place': 'ggn', 'tech': 'python', 'mob': '97328688405296'}
+name : shobhit
+place : ggn
+tech : python
+mob : 97328688405296
+
+
+Shuffle list
+************
+from random import shuffle
+x = ['Keep', 'The', 'Blue', 'Flag', 'Flying', 'High']
+shuffle(x)
+
+Use of dir() in python:
+***********************
+To get the list of dunder as well as user defined methods of class we use dir() function.
+class a:
+	pass
+	def hello(self):
+		pass
+
+dir(a)
+['__class__', '__delattr__', '__dict__', '__dir__', '__doc__', '__eq__', '__format__', '__ge__', '__getattribute__', '__gt__', '__hash__', '__init__', '__init_subclass__', '__le__', '__lt__', '__module__', '__ne__', '__new__', '__reduce__', '__reduce_ex__', '__repr__', '__setattr__', '__sizeof__', '__str__', '__subclasshook__', '__weakref__', 'hello']
+
+First class functions in python:
+*********************************
+functions which can be passed as an argument to a function
+functions which can be assigned to a variable
+functions which can be returned from another function 
+
+Higher order functions:
+***********************
+The function which takes argument as a function
+
+def add(a,b):
+    return print(a+b)
+
+
+def addition(*args):
+    return args
+
+addition(add(1,3)) # here add is a first class function and addition is a higher order function.
+
+
+Closer functions: The function which wraps another function is called closer functions
+*****************
+def number(a,b):
+    def mult(c):
+        return((a+b)*c)
+    return mult
+
+
+Mutable and immutable datatypes in python:
+********************************************
+Mutable- list,dict,sets
+Immutable - int,float,str,tuples,bool
+
+**** dictionary keys can be any immutable datatype. because keys cannot be changed
+
+Namespaces in Python:
+**********************
+Like every language python also maintains the namespaces in the form of python dictionaries.
+A namespace is a system to have a unique name for each and every object in Python. An object might be a variable or 
+a method.
+There are 3 types of namespaces:
+1) Inbuit namespaces for inbuild functions like print (__print__(),__str__() etc)
+2) Global namespace for global variables 
+3) Local namespace for local variables
+
+ex:
+a=2
+so the namespace representation would be {a:2}
+
+serialization and deserialization using pickle
+************************************************
+
+to convert into serialization: pickle.dump(data,f) # dump data to pickle file
+to convert into deserialization: pickle.load(data,f) # load data from pickle file
+
+Any object in Python can be pickled so that it can be saved on disk. 
+What pickle does is that it “serializes” the object first before writing it to file.
+Pickling is a way to convert a python object (list, dict, etc.) into a character stream
+
+data ={"name":"shobhit","age":28,"phno":[9958766250,9962058544]}
+
+import pprint as p
+
+p.pprint(data)
+{'age': 28, 'name': 'shobhit', 'phno': [9958766250, 9962058544]}
+
+import pickle
+
+with open("data.pkl","wb") as f:
+    pickle.dump(data,f)
+
+f
+Out[17]: <_io.BufferedWriter name='data.pkl'>
+
+del data
+
+with open("data.pkl","rb") as f:
+    data=pickle.load(f)
+    
+
+data
+Out[20]: {'name': 'shobhit', 'age': 28, 'phno': [9958766250, 9962058544]}
+
+
+shallow copy and deep copy 
+*****************************
+shallow copy: both the datastructure pointing to same address so if someone changes the value, it will impact other.
+
+deepcopy : both the datastructure pointing to different address so if someone changes the value , it will not impact other.
+
+import copy as c
+l=[1,2,3,4]
+l1=c.copy(l) 
+'''shallow copy because both are pointing to same memory location
+   if something is changed by l1 it will be changed in l and
+   vice versa as the address location in memory is same and both are pointing to same address'''
+id(l) and id(l1) are same as both are stored in same location in memory
+
+l1=c.deepcopy(l)
+'''
+in deep copy both the elements are stored @ different addresses in memory and hence no link between both the element
+if any thing is changed by l1 it will not change l and vice versa.
+'''
+id(l) and id(l1) are not same as both are stored at different address
+
+memory management in python
+******************************
+everything in python is an object. There are two types of memory division used by python.
+heap memory 
+stack memory
+The objects are created is in heap memory (like x=5 here 5 is in heap memory) and 
+function execution is in stack memory.
+
+
+python compiled or interpreted
+*******************************
+Python is both compiled and interpreted language.
+in case of programming language like C and C++ they are compiled language i.e when a develop writes a code it is written 
+in high level langauge and then compiler compiles and converts the High level language in machine language.
+in case of python below flow is used:
+
+python code(.py file or in repl)-->compiled code by compiler-->Byte code-->interpreted by PVM-->machine language
+the reason for converting the code into bytecode is to achieve platform independence i.e we can run code on any machine 
+with any CPU architecture design or structure.
+
+For example, When you run myprog.py source file, the python interpreter first looks to see if any 'myprog.pyc' (which is the byte-code compiled version of 'myprog.py') exists, and if it is more recent than 'myprog.py'. If so, the interpreter runs it. If it does not exist, or 'myprog.py' is more recent than it (meaning you have changed the source file), the interpreter first compiles 'myprog.py' to 'myprog.pyc'.
+
+there are various implementations of python i.e python language when executed and perform tasks it internally executed in other language.
+1)cpython -- executes in c language.
+2)jython -- executed in java
+3)ironpython -- executed in .net
+4)pypy
+
+global variable and local variable
+***********************************
+a=10 -- (1)
+def functions():
+    global a # global keyword is used to change the value of global variable (1) from inside a function 
+    a=15
+    print('in function:',a)
+
+functions()
+print('outside function:',a)
+
+output:
+--------    
+in function: 15
+outside function: 15
+
+x=10
+
+def changeval():
+    x=20
+    globals()['x']=11 # changed global variable value
+    print('local val',x)
+    print('global val',globals()['x'])
+
+
+changeval()
+
+print('outside func',x)
+
+Here globals()['x'] gives the value of global variable inside function and we can change the global variable value
+from inside the function keeping local variable value same.
+
+multithreading and multiprocessing
+***********************************
+'''
+here to create 2 different thread we passed Tread module in class arguments.
+classes are now inheriting the functionality of Thread class which is present
+in threading module imported on top.
+Also we have to start both the treads to split the main thread into subtreads
+and run simultaniously.
+'''
+from threading import *
+import time
+class hello(Thread):
+    def __init__(self):
+        self.msg='hello'
+        
+    def run(self):
+        for i in range(5):
+            print(self.msg)
+            
+class hi(Thread):
+    def __init__(self):
+        self.msg='hi'
+        
+    def run(self):
+        for i in range(5):
+            print(self.msg)
+            
+t1=hello()
+t2=hi()
+
+
+# creating thread
+th1=Thread(target=t1.run())
+th2=Thread(target=t2.run())
+
+# starting thread
+th1.start()
+th2.start()
+
+# joining subtread to main thread
+th1.join()
+th2.join()
+
+The syntax is same for multiprocessing , we use the below 
+from multiprocessing import process
+
+p1=process(target=t1.run())
+p2=process(target=t2.run())
+p1.start()
+p2.start()
+
+p1.join()
+p2.join()
+
+disadvantage of Multitreading which is GIL ( global interpreter lock)
+the GIL allows only one thread to execute at a time even in a multi-threaded architecture with more than one CPU core, the GIL has gained a reputation as an “infamous” feature of Python.
+
+Also in multiprocessing there is a concept of lock ie. lock.aquire() and lock.release()
+this is used on the shared data between 2 process. Once process 1 completes its manupulation on 
+shared data then process 2 can manipulate the shared data. ( kind of GIL implementation )
+
+To overcome the GIL limitation , multiprocessing is introducted in which the program runs in different 
+execution space which uses the multiple cpu cores to execute the program.
+
+functional programming:
+***********************
+lamba expressions are ananamous functionnctions with no name. op=lambda x,y,z: print('3x+2y+3z is :',3*x+2*y+3*z)
+
+Map function:
+--------------
+temp=[('satna',30),('bhopal',20),('delhi',15),('ggn',50)]
+
+print(temp)
+c_to_f=lambda data: (data[0],(9/5)*data[1]+32)
+
+# map function
+print(list(map(c_to_f,temp)))
+
+''' 
+the map function is used to pass the function with the data in a single line
+this function is usesful when we want to apply the function on the list of 
+values. Instead of iterating for each value and apply the logic
+we can use map function.
+'''
+
+filter function:
+----------------
+l=[1,2,4,5,20,23,39]
+
+# use filter function to get data > 10
+
+print(list(filter(lambda x:x>10,l)))
+
+''' filter function is used to filter out data. In this function
+we pass 2 arguments ; 1st is the filter logic and second is the data.
+The filter function works on each element of data. Instead of iterating 
+through the elements and apply filter on each the filter function 
+applies filter logic on all elements'''
+
+l=[1,2,'',4,'',6]
+
+print(list(filter(None,l)))
+
+enumerate function to get position and data:
+----------------------------------------------
+l=[1,2,4,5,20,23,39]
+
+for pos,data in enumerate(l):
+    print('position is {} and data is {}'.format(pos,data))
+
+
+
+decorators ,firstclass function and closer function:
+****************************************************
+Using decorators we can add extra features in the existing functions without changing the code of existing function.
+It is a function which takes another function as an argument and returns another function.
+
+# Decorator function will reverse numerator and denominator if numerator < denominator
+def div(a,b):
+    print(a/b)
+
+# here div is passed to decorator function so it is called as first class function    
+    
+def decoratorfunc(func):
+    def innerfunc(a,b):
+        if a<b:
+            a,b=b,a
+        return(func(a,b))
+    return innerfunc
+
+
+# calling decorator function way 1
+decoratorfunc(div)(2,4)
+    
+# calling decorator function way 2
+div=decoratorfunc(div)
+div(2,4)
+
+############## closer function ############
+def number(a,b):
+    def mult(c):
+        return((a+b)*c)
+    return mult
+
+a=number(2,3)(4)
+print(a)
+
+# here number is called the closer function
+
+
+iterators
+*********
+print('program 1 ....')
+# a simple iterator ; a loop internally calls the next function of iterator
+a=[1,5,6,99]
+
+it=iter(a)
+print(it.__next__())
+print(it.__next__())
+print(it.__next__())
+print(it.__next__())
+
+print('program 2 ....')
+class TopTen:
+    def __init__(self):
+        self.num=1
+    
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        if self.num<=10:
+            val=self.num
+            self.num+=1
+            return val
+        else:
+            raise StopIteration
+            
+
+t1=TopTen()
+
+for i in t1:
+    print(i)
+
+generators:
+***********
+Generators are used in python to return iterators.
+we use yield keyword to get iterators from generators.
+The advantage of using generators over iterators is that we don't need to create class and 
+write our own __iter__() and __next__() method instead we just have to use yield keyword 
+instead of return. Also if we use simple loop to get records let say from database then the complete
+data will be in the memory where as the generators and iterators get the data one by one and load 
+into the memory which saves the memory.
+Every generator is an iterator but not every iterator is a generator.
+
+print('Program 1 ....')
+def topten():
+    yield 1
+    yield 2
+    yield 4
+
+values=topten()
+print(values.__next__())
+print(values.__next__())
+print(values.__next__())
+
+
+print('Program 2 ....')
+def topten():
+    n=1
+    while n<=10:
+        yield n
+        n+=1
+        
+        
+it=topten()
+
+for i in it: # here for loop will apply __next__() function in the iterator created by generator 
+    print(i)
+
+special methods (dunder methods):
+*********************************
+class Employee:
+    def __init__(self,firstname,lastname):
+        self.firstname=firstname
+        self.lastname=lastname
+        
+    def fullname(self):
+        return self.firstname+' '+self.lastname
+
+    def __str__(self):
+        return self.firstname+self.lastname
+
+    def __repr__(self):
+        return self.firstname+ '-' +self.lastname
+
+
+e1=Employee('shobhit','bhatnagar')
+
+print(e1)
+
+#print(e1.__repr__())
+#print(e1.__str__())
+
+Here __<method>__ is called dunder method. Above is the class using dunders. Also while printing e1
+is calling __repr__ by default but if __ str__ is present then the preference will be given to __str__
+
+OOPs:
+*****
+1)In OOPs when we define classes and objects using the below 
+class Computer:
+    pass
+    
+c1=Computer()
+Here c1 is object of class Computer and Computer() is constructor of class which calls the __init__() method
+and allocate the space to object c1 in the memory based on the variable bind with an object
+
+c1=Computer(var1,var2,var3) will be allocated more space than c1=Computer()
+
+2) The variables which are defined in the __init__() are called instance variable and the variables
+which are defined in the class outside the __init() are called class variables.
+
+class car:
+    wheels=4
+    def __init__(self):
+        self.name='BMW'
+        self.mil=8
+        
+
+c1=car()
+# changing the class variables
+car.wheels=5 # changing the class variables 
+print(c1.name,c1.mil,c1.wheels)
+''' output
+BMW 8 5
+'''
+
+
+3) Types of methods in class:
+    a) instance method
+    b) class method
+    c) static method
+    
+    Below is an example of all the 3 types of methods:
+    
+    class student:
+        school='Python Labs'
+        # the below method is a instance method which takes self as an argument
+        def __init__(self,m1,m2,m3):
+            self.m1=m1
+            self.m2=m2
+            self.m3=m3
+    
+        def avg(self):
+            return ((self.m1+self.m2+self.m3)/3)
+        # the below method is a class method which takes cls as an argument
+        @classmethod
+        def getschoolname(cls):
+            return cls.school
+        
+        # the below method is a static method which is independent, it takes neither class name nor object name
+        @staticmethod
+        def info():
+            print('This school teaches python')
+        
+    
+    s1=student(100,90,80)
+    
+    print(s1.avg()) # this is calling instance method
+    
+    print(student.getschoolname()) # this is a class method
+    
+    print(student.info()) # this is a static method which does not takes class or obj as an argument
+    
+
+4) Getter and setter methods and @property decorators
+    Getter and setter methods are the 2 types of instance methods which can be used in a class
+    to get the value of object variable and to set the value of object variable.
+    
+        class car:
+        def __init__(self,speed):
+            self.speed=speed
+            
+        def get_speed(self):
+            return(self.speed)
+            
+        def set_speed(self,newspeed):
+            print('Old speed was:',self.speed)
+            self.speed=newspeed
+            print('new speed set:',self.speed)
+    
+    c1=car(100)
+    
+    print(c1.get_speed())
+    
+    print(c1.set_speed(120))
+
+5) Inner classes
+    Class inside a class is called as inner class. Below is an example:
+    
+    class student:
+        def __init__(self,name,rollno):
+            self.name=name
+            self.rollno=rollno
+            self.lap=self.laptop() # object of class laptop is lap
+            
+        def show(self):
+            print(self.name,self.rollno)
+            (self.lap.show()) # object of class laptop lap calls show() of laptop in show() of student
+            
+            
+        class laptop:
+            def __init__(self,lapname='HP',processor='i7'):
+                self.lapname=lapname
+                self.processor=processor
+            
+            def show(self):
+                print(self.lapname,self.processor)
+                
+    
+    s1=student('shobhit','583853')
+    
+    s1.show()
+    
+    o/p:
+    ----
+    shobhit 583853
+    HP i7
+
+6) Inheritance are of 3 types:
+    1) Single level inheritance 
+    2) Multilevel inheritance
+    3) Multiple Inheritance
+    
+    Below is an example:
+    
+    class A:
+        def feature1(self):
+            print('feature 1')
+            
+    class B(A):
+        def feature2(self):
+            print('feature 2')
+            
+    class C(B):
+        def feature3(self):
+            print('feature 3')
+            
+    
+    class D(C):
+        def feature4(self):
+            print('feature 4')
+    
+    class ABC:
+        def featureabc(self):
+            print('feature xyz')
+            
+    class TEST:
+        def featuretest(self):
+            print('feature test')
+    
+    class XYZ(ABC,TEST):
+        def featurexyz(self):
+            print('feature xyz')        
+            
+    # single level
+    print('single level inheritance\n')
+    b1=B()
+    b1.feature1() # object of B class can access function of class A
+    b1.feature2()
+    
+    # multilevel example1
+    print('\nmultilevel level inheritance -- example1\n')
+    c1=C()
+    c1.feature1() # object of C class can access function of class A        
+    c1.feature2() # object of C class can access function of class B
+    c1.feature3()
+    
+    # multilevel example 2
+    print('\nmultilevel level inheritance -- example2\n')
+    d1=D()
+    d1.feature1() # object of D class can access function of class A - inherited directly        
+    d1.feature2() # object of C class can access function of class B - inherited indirectly as C inherits B       
+    d1.feature3() # object of D class can access function of class C - inherited directly       
+    d1.feature4()
+    
+    # multiple
+    print('\nmultiple inheritance\n')
+    obj=XYZ()
+    obj.featureabc()
+    obj.featuretest()
+    obj.featurexyz()
+    
+    output:
+    -------
+    single level inheritance
+    
+    feature 1
+    feature 2
+    
+    multilevel level inheritance -- example1
+    
+    feature 1
+    feature 2
+    feature 3
+    
+    multilevel level inheritance -- example2
+    
+    feature 1
+    feature 2
+    feature 3
+    feature 4
+    
+    multiple inheritance
+    
+    feature xyz
+    feature test
+    feature xyz
+    
+7) Init , super and MRO in classes
+
+    Example : In the below example we have two classes and B inherits A. If init method is not present in B
+    class so the object of B will call init of A and if B class has its init then the object will call init of B.
+    
+    class A:
+        def __init__(self):
+            print('Init of class A')
+        def featureA(self):
+            print('feature of class A')
+            
+            
+    class B(A):
+        def __init__(self):
+            print('Init of class B')
+        def featureB(self):
+            print('feature of class B')
+            
+    b1=B()
+    b1
+    
+    output:
+    ------
+    Init of class B
+    
+    and if the below code is :
+    
+    class A:
+        def __init__(self):
+            print('Init of class A')
+        def featureA(self):
+            print('feature of class A')
+            
+            
+    class B(A):
+        '''def __init__(self):
+            print('Init of class B')'''
+        def featureB(self):
+            print('feature of class B')
+            
+    b1=B()
+    b1
+
+    output:
+    ------
+    Init of class A
+    
+    If we want to call method of class A into Class B and B inherits A then we use super keyword.
+    Below is an example
+    
+    
+    class A:
+        def __init__(self):
+            print('Init of class A')
+        def featureA(self):
+            print('feature of class A')
+            
+            
+    class B(A):
+        def __init__(self):
+            print('Init of class B')
+        
+        def featureB(self):
+            super().__init__()  # here we are calling __init of A inside featureB function
+            print('feature of class B')
+            
+    b1=B()
+    b1.featureB()
+    
+    output:
+    -------
+    Init of class B
+    Init of class A
+    feature of class B
+    
+    MRO - method resolution order is a concept in multiple and multilevel inheritance in which 
+    if we have 2 common methods say func() in both the super classes A and B from which a subclass C
+    is inheriting the features then a subclass C when use super().func() , MRO will check func() in left class i.e A
+    and execute the function func(). MRO checks from Left to right or Top to Bottom.
+    
+    class A:
+        def __init__(self):
+            print('class A init')
+            
+    class B:
+        def __init__(self):
+            print('class B init')
+    
+    class C(A,B):
+        def noinit(self):
+            super().__init__()
+            print('No init')
+            
+            
+    c1=C()
+    c1
+    
+    output:
+    -------
+    class A init
+
+8) Polymorphism:
+    There are 4 types of polymorphism. They are:
+    a) Duck typing
+    b) Operator overloading
+    c) Method overloading
+    d) Method overriding
+    
+    a) Duck typing: If a bird moves like duck,swim like duck,fly like duck then its a duck. Below is an example:
+        class duck:
+            def features(self):
+                print('Quacks')
+                print('Swims')
+                print('i am a real duck')
+                
+        class parrot:
+            def features(self):
+                print('Quacks')
+                print('Swims')
+                print('i am a not a real duck')
+                
+        
+        class whoisduck:
+            def ducklikebird(self,bird):
+                bird.features() 
+                
+        d1=duck()
+        p1=parrot()
+        
+        w1=whoisduck()
+        
+        
+        print('executing feature function of parrot class')
+        w1.ducklikebird(p1)
+        print('\nexecuting feature function of duck class')
+        w1.ducklikebird(d1)
+        
+        ''' In the above example we can see that both the classes have features function
+        and in class whoisduck we are using bird.features()
+        now it does not matter which class (duck or parrot) function 'features' is passed 
+        in whoisduck class but this shows that we can change the function which is executing in whoisduck
+        provided BOTH THE FUNCTION NAME (from duck and parrot class)  MUST BE SAME. This is a type of
+        polymorphism which is called as ducktyping'''
+        
+        output
+        -------
+        executing feature function of parrot class
+        Quacks
+        Swims
+        i am a not a real duck
+        
+        executing feature function of duck class
+        Quacks
+        Swims
+        i am a real duck
+        
+    b) Operator operloading:
+            class Student:
+            def __init__(self,m1,m2):
+                self.m1=m1
+                self.m2=m2
+                
+            # here we have used dunder method or magic method add and done operator overloading
+            def __add__(obj1,obj2):
+                marks1=obj1.m1+obj2.m1
+                marks2=obj1.m2+obj2.m2
+                s3=Student(marks1,marks2)
+                return s3
+            # here we have used dunder method or magic method greater than and done operator overloading
+            def __gt__(obj1,obj2):
+                marks1=obj1.m1+obj1.m2
+                marks2=obj2.m1+obj2.m2
+                if marks1>marks2:
+                    return True
+                else:
+                    return False
+                
+        
+        s1=Student(10,20)
+        s2=Student(50,60)
+        
+        s3=s1+s2 # here + is not supported for objects but we have done operator overloading
+        print(s3.m1)
+        print(s3.m2)
+        
+        if s1>s2: # here > is not supported for objects but we have done operator overloading
+            print('Object s1 has greater values')
+        else:
+            print('Object s2 has greater values')
+            
+        NOTE: When ever we print the object like 
+        
+        a=10
+        print(a)
+        
+        or 
+        
+        s1=Student(10,20)
+        print(s1)
+        
+        Internally while printing the object it automatically converts into string i.e
+        __str__() method is applied like print(a.__str__()) or print(s1.__str__())
+
+            
+    c) Method overloading:
+       Method overloading is a concept in which if we have 2 or more methods in a class with the same name then
+       it overloads the functionality of methods.
+       
+       ex: method 1-- def sum(a,b), method 2-- def sum(a,b,c) ; here sum method with a,b,c args overloads
+       sum method with a,b args.
+       
+       NOTE: In python method overloading is not possible. We can implement by using some twiks but it is 
+       not implemented in python.
+       
+           class Student:
+                def sum(self,a=0 ,b=0 ,c=0):
+                    s=a+b+c
+                    return s
+                
+           s1=Student()
+    
+           print(s1.sum(3,4))  # Here you can see that 2 variables are passed in a sum functions but it is
+           expecting 3 values so to adjust , we have made all the values as 0 by default in sum method.
+           
+           Method overloading is not present in python because when we declare a method in a class, we pass 
+           some arguments in a method. In python we don't need to declare the datatype of arguments passed in 
+           a method which basically means that if a method with the same name and same arguments is used for string
+           it can also be used for numbers that's why method overloading is not implemented in python.
+           
+    d) Method overriding:
+        If Two or more classes have methods with the same name and if object of subclass calls the method of subclass
+        then the process will look for the method in subclass, if not present it will call the method of superclass
+        if found then it will call the method of subclass, so here method of subclass overrides the method of
+        super class. This is called as method overriding. Below is an example:
+        
+
+            #Example1:
+            
+            class A:
+                def show(self):
+                    print('In Show function of class A')
+                    
+            
+            class B(A):
+                pass
+            
+            
+            b1=B()
+            b1.show()
+                
+            output:
+            -------
+            In Show function of class A
+            
+            #Example2:
+            
+            class A:
+                def show(self):
+                    print('In Show function of class A')
+                    
+            
+            class B(A):
+                def show(self):
+                    print('In Show function of class B')
+            
+            
+            b1=B()
+            b1.show()
+            
+            output:
+            -------
+            In Show function of class B
+            
+ZIP funtion in python
+*********************
+
+'''
+Zip function can be used to zip 2 or more lists into tuples and for 2 lists we can create dictionaries
+'''
+
+l1=[1,2,3,4]
+l2=['a','b','c','d']
+
+
+print((zip(l1,l2))) # this will give object of zip class and to run this function we can convert the output into lists or dict
+
+'''
+output:
+<zip object at 0x00000221FC365E08>
+'''
+
+print(list(zip(l1,l2)))
+
+'''
+output:
+[(1, 'a'), (2, 'b'), (3, 'c'), (4, 'd')]
+'''
+
+print(dict(zip(l1,l2)))
+
+'''
+output:
+{1: 'a', 2: 'b', 3: 'c', 4: 'd'}
+'''
+
+l1,l2=(list(zip(*l))) # this will UNZIP the list into 2 different lists
+
+print(list(l1))
+print(list(l2))
+
+'''
+output:
+[1, 2, 3, 4]
+['a', 'b', 'c', 'd']
+'''
+
+Static and Dynamic type of languages:
+************************************
+Statically typed languages
+A language is statically typed if the type of a variable is known at compile time. 
+For some languages this means that you as the programmer must specify what type each variable is (e.g.: Java, C, C++); other languages offer some form of type inference, the capability of the type system to deduce the type of a variable (e.g.: OCaml, Haskell, Scala, Kotlin)
+
+The main advantage here is that all kinds of checking can be done by the compiler, and therefore a lot of trivial bugs are caught at a very early stage.
+
+Examples: C, C++, Java, Rust, Go, Scala
+
+Dynamically typed languages
+A language is dynamically typed if the type is associated with run-time values, and not named variables/fields/etc. 
+This means that you as a programmer can write a little quicker because you do not have to specify types every time 
+(unless using a statically-typed language with type inference).
+
+Examples: Perl, Ruby, Python, PHP, JavaScript
+
+Most scripting languages have this feature as there is no compiler to do static type-checking anyway,
+ but you may find yourself searching for a bug that is due to the interpreter misinterpreting the type of a variable. 
+ Luckily, scripts tend to be small so bugs have not so many places to hide.
+
+Most dynamically typed languages do allow you to provide type information, but do not require it.
+ One language that is currently being developed, Rascal, takes a hybrid approach allowing dynamic typing 
+ within functions but enforcing static typing for the function signature.
+
+
+No interfaces in Python:
+************************
+Interfaces are created in other languages like Java because it does not support multiple inheritance where as in python we don't need interfaces because we can implement
+multiple inheritance.Also interfaces are only implemented in static languages where we have datatype defined for a variable but python is a dynamic type of language with 
+no datatype defined and hence multiple inheritance is possible in python, thus no interfaces.
+
+Why tuples are faster than list:
+*********************************
+In python we have two types of objects. 1. Mutable,  2. Immutable. In python lists comes under mutable objects and tuples comes under immutable objects.
+Tuples are stored in a single block of memory. Tuples are immutalbe so, It doesn't require extraspace to store new objects.
+Lists are allocated in two blocks: the fixed one with all the Python object information and a variable sized block for the data.
+It is the reason creating a tuple is faster than List.
+It also explains the slight difference in indexing speed is faster than lists, because in tuples for indexing it follows fewer pointers.
+
+Abstract classes ( ABC classes):
+********************************
+Abstract classes are the classes in python which is a blue print of every functionality which can be 
+implemented in other classes and the object of abstract class cannot be created. Methods in abstract 
+classes are just having signatures but the functionality is implemented in other classes which inherit 
+abstract class. we use @abstractmethod dectorator to define a method as abstract method in an abstract class.
+Abstract class inherits ABC class from abc module in python to get property of abstract classes.
+
+from abc import ABC,abstractmethod
+
+class Animal(ABC):
+    @abstractmethod
+    def move(self):
+        pass
+    
+class Human(Animal):
+    def move(self):
+        print('I am human and i can walk')
+        
+class Snake(Animal):
+    def move(self):
+        print('I am snake and i can crawl')
+        
+
+h1=Human()
+h1.move()
+
+s1=Snake()
+s1.move()
+
+Encapsulation, Public and Private methods/variables
+****************************************************
+Encapsulation is a concept in oops where the class methods and class variables are not allowed to get accessed 
+using object from outside the class. This prevent any modifications in data and methods of a class. Normally 
+the methods and variable which we define in a class are public methods and variables can be accessed using object 
+but we can also define the private methods and variable in a class which cannot be accessed using object. Here we are hiding the functionality of a class which is called as encapsulation.
+
+class Car:
+    __speed=100
+    country='India'
+    print('Public variable:',country)
+    def __init__(self,speed):
+        self.speed=speed
+        
+    def __changeconfig(self):
+        print('buildnumber:10214 modelblueprint:x087478 Tech:electric')
+        
+        
+    def set_speed(self,country):
+        print('original speed:',self.__speed)
+        self.__speed=self.speed
+        print('New speed:',self.__speed)
+        print('Calling private method using public method set_speed')
+        self.__changeconfig()
+        print('Country changed:',country)
+
+    
+    
+        
+
+c1=Car(50)
+c1.set_speed('US')
+c1.__speed=500 # this will not change the private variable
+c1.__changeconfig() # this will give error because private methods cannot be called directly.
+        
+        
+output:
+--------
+Public variable: India
+original speed: 100
+New speed: 50
+Calling private method using public method set_speed
+buildnumber:10214 modelblueprint:x087478 Tech:electric
+Country changed: US
+
+Getter and setter methods are used in python in order to follow data encapsulation principles.
+Getter methods are used to get the values of varibles and functions which are private in class
+and setter methods are used to set the values of private variables using setter methods, we cannot change the
+values of private variables directly using object. Getter and setter methods protect the class variables
+and methods to be changed.
+
+First class functions:
+************************
+Below are the properties of first class functions:
+-------------------------------------------------
+The functions which can be passes in another function
+The functions which can return other functions
+The functions which can be treated as objects 
+
+# Python program to illustrate functions 
+# can be treated as objects 
+def shout(text): 
+	return text.upper() 
+
+print shout('Hello') 
+
+yell = shout 
+
+print yell('Hello') 
+
+
+# Python program to illustrate functions 
+# can be passed as arguments to other functions 
+def shout(text): 
+	return text.upper() 
+
+def whisper(text): 
+	return text.lower() 
+
+def greet(func): 
+	# storing the function in a variable 
+	greeting = func("Hi, I am created by a function passed as an argument.") 
+	print greeting 
+
+greet(shout) 
+greet(whisper) 
+
+
+# Python program to illustrate functions 
+# Functions can return another function 
+
+def create_adder(x): 
+	def adder(y): 
+		return x+y 
+
+	return adder 
+
+add_15 = create_adder(15) 
+
+print add_15(10) 
+
+
+Metaclass:
+**********
+In python everything is an object. Even the classes are also the instance of other class. That class is called as 
+type class or metaclass.
+
+In the below example we have created the object of student class and the object is of type student where as when
+we print type of Student class the output is 'Type'. This means class Student is an instance of Type class.
+
+class Student:
+    pass
+
+s1=Student()
+print(type(s1))
+'''
+output:
+<class '__main__.Student'>'''
+
+print(type(Student))
+'''output
+<class 'type'>'''
+
+so Metaclasseses are used for generation of classes. We can create custom metaclass which will generate the class.
+When ever we create a class we perform the below:
+1) Create object of a class
+2) Instantiate the Object 
+
+The above 2 can be done using metaclass.
+To create our custom metaclass, our custom metaclass have to inherit type metaclass and usually override –
+__new__(): It’s a method which is called before __init__(). It creates the object and return it. We can overide this method to control how the objects are created.
+__init__(): This method just initialize the created object passed as parameter
+
+We can create metaclass using 2 methods:
+1) Using type keyword
+2) Overriding the __new__() and __init__() method of type metaclass.
+
+USING TYPE METHOD:
+-----------------
+
+def test_method(self):
+	print("This is a method which is called in Test class but not of class") 
+
+# creating a base class 
+class Base: 
+	def myfun(self): 
+		print("This is a method of base class")
+
+
+# Creating Test class dynamically using type() method directly 
+Test = type('Test', (Base, ), dict(x="Shobhit", my_method=test_method))
+
+'''
+The above will create a class as shown below:
+
+class Test(Base):
+    x='atul'
+    def my_method(self):
+        return test_method(self)
+
+a= Test()
+a.my_method()
+'''
+
+# Print type of Test 
+print("Type of Test class: ", type(Test)) 
+
+# Creating instance of Test class 
+test_obj = Test() 
+print("Type of test_obj: ", type(test_obj)) 
+
+# calling inherited method 
+test_obj.myfun() 
+
+# calling Test class method 
+test_obj.my_method() 
+
+# printing variable 
+print(test_obj.x)
+
+Difference between python 2.x and 3.x:
+**************************************
+1) In python 2 we use raw_input() but in python 3 we use input(). Raw_input returns an evaluated output
+where as input() returns the output in string. To evaluat we should use eval() in python 3.x.
+
+x=input()
+print('The entered value is :',x)
+print('The evaluated values is:',eval(x))
+
+x=input() # the input given is sho
+print(x)
+sho=1
+print(eval(x))
+
+2) In python 2 print is a statement where as in python 3 print is a function.
+print "hello" -- in python 2
+print("hello") -- in python 3
+
+3) In python 2 we use <> for not equals to where as we use != in python 3 for not equals to.
+
+4) In python 2 we use range which return List of values where as in python 3 we use range which returns range object.
+
+
+
+***************************
+Python developer toolkits:
+***************************
+1)sys.path gives the list of all the directories where python searches the imported module used in a program.
+ex: import request , so rquest module will be searched in the directories listed by sys.path.
+
+2) Pip details:
+pip list # show all the installed packages.
+pip freeze > requirements.txt '''this will add the installed packages details in requirements.txt file 
+								which further can be parsed by pip to install all the packages from this file using the below command.'''
+pip install -r requirements.txt # install all the packages from requirements file.
+pip show <package name> # it will give all the details and dependencies of packages
+
+3) Virtualenv:
+This is a python package which is used to create virtual environment in which we can install packages which we need 
+for out project.This prevents clashing with some others projects in python using different versions of 
+same package and hence does not break any running functionality using different version of same python package.
+
+command to install virtualenv:
+pip install virtualenv
+
+create a directory : mkdir .virtualenvs
+inside this directory create your project in virtualenvs : virtualenv project1
+activate the virtualenv: . project1/bin/activate
+deactivate the virtualenv: deactivate
+
+4) Virtualenvwrapper: This is a wrapper which can be installed using pip install virtualenvwrapper
+Using keyword workon <virtualenv name>we can switch between different virtual envs in a system.
+This command 'workon' automatically deactivates the previous virtual env and activates the new virtualenv which we passed 
+with workon keyword.
+workon <virtualenv1>
+workon <virtualenv2> # switch from virtualenv1 to virtualenv2
+
+5)Pylint: This tool is used to find out the code quality as per Pip-8 conventions.
+Few Pip 8 conventions are:
+Name of classes should be in camel case like StudentDetail
+Name of Variable should be in small letters, use _ in case of large variable name like student_name
+Variable names should be meaningfull like student_name='Shobhit' not like a='Shobhit'
+Name of functions should be in small letters, use _ in case of large variable name like student_data
+Docstring should be used while writing any business logic in methods,functions,classes etc.
+Name of constant variables should be in Caps like CONSTANT_VAL=5
+
+to run pylint we use : pylint <name of module> # this will check all the files present inside module 
+(NOTE: difference between module and directory is that in module there must be __init__.py file where as in directory __init__.py file is not present).
+
+There are many options to disable pylint code , one of the option is to write the below in your .py file
+# pylint: disable=message-name
+
+6) Python debugger(pdb): 
+It is a debugging model in python which can be used like :
+import pdb
+pdb.set_trace()
+
+in a code where we need to debug , we can write the above 2 lines and debugger will start from that line in python.
+The debugger can be used in IDE like pycharm.
+
+7) Python documentation using sphinx:
+This is a python library which is used to generate the Html or pdf documentation using the docstring of python.
+The doc string in python is written just after starting a function,class or method and this creates __doc__() method
+of class for which we are writing documentation.
+
+Use of repr and eval methods:
+-----------------------------
+a=1
+print (eval(repr(a)))
+print (type(eval(repr(a))))
+1
+<class 'int'>
+
+1) Here an integer object is converted into string object using repr() method
+2) Further eval() converts the str obj into int object and evaluates the value
+
+Difference between / and //:
+----------------------------
+/ - gives the actual value of quotient
+// - gives the round off value of quotient
+a,b=1.4,2
+a/b=0.7
+a//b=0.0
+
+Random value from list or tuple:
+---------------------------------
+l=[1,3,4]
+t=(4,6,7)
+import random as r
+print('random value from list:',r.choice(l))
+print('random value from tuple:',r.choice(t))
+
+Shuffle a list:
+---------------
+random.shuffle(l)
+
+
+
+String functions:
+-----------------
+capitalize() − Capitalizes first letter of string.
+isalnum() − Returns true if string has at least 1 character and all characters are alphanumeric and false otherwise.
+isdigit() − Returns true if string contains only digits and false otherwise.
+islower() − Returns true if string has at least 1 cased character and all cased characters are in lowercase and false otherwise.
+isnumeric() − Returns true if a unicode string contains only numeric characters and false otherwise.
+isspace() − Returns true if string contains only whitespace characters and false otherwise.
+istitle() − Returns true if string is properly "titlecased" and false otherwise.
+isupper() − Returns true if string has at least one cased character and all cased characters are in uppercase and false otherwise.
+lower() − Converts all uppercase letters in string to lowercase.
+max(str) − Returns the max alphabetical character from the string str.
+min(str) − Returns the min alphabetical character from the string str.
+list.insert(index, obj) − Inserts object obj into list at offset index.
+list.remove(<elementname>)
+list.pop() # removes the last element by default
+list.pop(3) # removes element on index 3
+
+a='abca'
+a.replace('a','x',1) # first occurance of a
+a.replace('a','x',2) # second occurance of a
+
+a='Hello'
+a.swapcase()
+'hELLO'
+
+l.reverse() # to reverse the list
+
+
+-------------------------
+-------------------------
+
+
+#Basics of Python:
+'''
+1) PEDMAS ( paranthesis , exponential , division , multiplication , addition and substraction )
+2) ~x= -(x+1)
+3) cmp(x,y) -- if x>y then 1; if x=y then 0; if x<y then -1
+4)r"\nhello" -- op is \nhello because r treats the characters as raw characters
+5) 
+>>>example = "helle"
+>>>example.rfind("e") # op 4 i.e it returns the highest value of index; here e has index values as 1 and 4 so highest is 4
+6)
+>>>example="helloworld"
+>>>example[::-1].startswith("d") # op is true because startswith checks the word and if letter starts with d so true
+7)string.capitalize : It makes the first letter of string as capitalize
+8)s='123456' so s.center(12)---> '   123456   ' i.e it places the string in the center
+9)s.endswith('aaa') # op is True if s ends with aaa else False
+10)
+elements=['foo','bar','baz']
+for count, elem in enumerate(elements, 42):
+     print count, elem
+
+output:
+*******
+42 foo
+43 bar
+44 baz
+
+
+'''
+
+# write,append,read from file#
+x=open('C:\\Users\\SHOBHIT\\Downloads\\test.txt','w')
+x.write('hello')
+x.close()
+
+x=open('C:\\Users\\SHOBHIT\\Downloads\\test.txt','a')
+x.write('\nhello')
+x.close()
+
+x=open('C:\\Users\\SHOBHIT\\Downloads\\test.txt','r')
+print(x.read())
+x.close()
+# write,append,read from file#
+
+# code in file x
+# if the file is execute directly so __name__='__main__' but if the file is imported into another file then __name__='name of file'
+def fx():
+	print('using fx of x file')
+
+if __name__=='__main__':
+	print('The file is used directly')
+else:
+	print('The file is imported')
+	
+# code in y
+
+print('i am in file y')
+import x
+x.fx()
+print('The values above are from x file')
+
+# Gist of the above code is:
+# __name__='__main__' when the file is executed directly but __name__!='__main__' when the file is imported.
+
+
+#read a csv file in python
+with open('C:\\Users\\SHOBHIT\\Downloads\\sample_csv.csv') as csvfile:
+     data=csv.reader(csvfile,delimiter='|')
+      for rows in data:
+       print(rows)
+
+#os commands
+import os
+os.getcwd()
+os.mkdir('dir1')
+os.rename('dir1','dir2')
+os.rmdir('dir2')
+os.chdir('<path>')
+os.listdir()	
+
+#time commands
+import time 
+time.sleep(2)
+
+# Break and continue statements:
+#********************************
+
+a= 'python'
+>>> for i in a:
+	if i=='y':
+		break
+	print(i)	
+O/P:
+****
+p
+
+
+>>> for i in a:
+	if i=='o':
+		continue
+	print(i)	
+O/P:
+****
+p
+y
+t
+h
+n
+
+
+
+
+'''
+The below is most important. We can pass parameters to a script using the below.
+If the script name is abc.py then we can use python abc.py param1,param2,param3
+'''
+
+import sys
+x=(sys.argv)
+print(x)
+if x[1] == 'shobhit':
+ print ('hello admin')
+else:
+ print('You are not admin')
+
+
+#get the sysdate in python 
+import datetime as dt
+a=st.datetime.now()
+a.strftime("%Y%M%D %H%M%S") #YYMMDD hhmiss
+a.strftime("%Y%m%d %H%M%S") # yyyymmdd hhmiss
+
+# to get the documentation:
+print(func.__doc__)
+
+# to print calender of given month and year:
+import calendar
+y=input('Enter the year:')
+m=input('Enter the month:')
+print(calendar.month(int(y),int(m)))
+
+# to get the time in seconds to calculate start and end time of process
+a=time.time()
+b=time.time()
+print(b-a)
+
+
+# to count the number of upper cases in  a file:
+ with open('filename.txt') as file:
+ count=0
+ text=file.read()
+ for i in text:
+  if i.isupper==True
+	count=count+1
+
+# Generate a random number:
+import random
+print(random.random())
+
+
+########List comprehension ( sets,tupples,list,dict)########
+
+x=range(0,11)
+
+#example 1:
+l=[i for i in x if i%2==0]
+
+#example 2:
+letter='abc'
+op=[(let,num) for let in letter for num in x]
+
+# dictionary comprehension
+'''normal'''
+
+l=[1,2,3,4,5]
+lx=['name','class','teacher','school','location']
+dict={}
+for i,j in zip(l,lx):
+	dict[i]=j
+
+'''dict comprehension'''
+dict1={i:j for i,j in zip(l,lx)}
+
+# filtering in dict comprehension:
+dict1={i:j for i,j in zip(l,lx) if (i>1 and i<5)}
+
+# set comprehension
+l = [1,1,1,11,1,1,1,1,1,1,2,4,3,3,3,3,33,3,4,4,4,4,4,4,7,7,7,7]
+p={i for i in l}
