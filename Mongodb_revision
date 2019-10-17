@@ -1,6 +1,3 @@
-Mongodb:
-========
-
 Mongodb datamodelling
 ----------------------
 
@@ -122,3 +119,33 @@ These databases provides consistency by having master ( prod ) and slave (DR) da
 Cassendra :
 It supports Availability and partition tolerance i.e there is no master or slave concept.
 All the nodes are available to provide data in case of breakdown of any node and it supports database sharding hence data is distributed accross all the nodes. If data updation needs to be done then it will start from node 1 and at that time if some one reads the data from node 2 then he/she will get stale ( old data ) as the data is not updated in node2.
+
+
+
+Replicata sets in mongodb:
+---------------------------
+In a replicate set we have a primary server and multiple secondary servers.
+The data will be synced from primary to secondary servers.
+If we want to write data we have to use primary server. 
+If we want to read data we can use any server either primary or secondary.
+
+
+ACID properties:
+----------------
+Atomicity -- It means in a transaction either all the instructions participating in a transaction must execute or nothing should execute. This makes the data consistent and complete. ex: In a transaction if 2 updates are there so both should be run and data must be commited else if any one will run then it will make data inconsistent.
+
+Consistent -- If a system is consistent before execution of transaction then it must remian consistent after the executionof transaction. ex: if a= 5 before transaction and i have added 1 and then it the final database state must be a+1=6 i.e the correct state of database should be there after the transaction. Data should be correct after transaction.
+
+Isolation -- It means that if 2 or more transactions are executing seperately without affecting each other then it means that they are isolated.
+
+Durability -- It means if a data is stored in database and in case of software or hardware failure if the value still remains same and is not impacted  then it shows that database is durable.
+
+
+In order to increase the performance of mongodb :
+1) We should use replication across all the slave nodes from master so that read operation  can refer any of the slave node . Data will be updated on slaves due to replication from master.
+
+2) Sharding - It is a process of distributing data into multiple machines based on some attributes i.e if the total data is of 1000 users then we can shard the data based on userids. User 1-100 on 1 server , 101-200 on other and so on. Using this if someone wants to access 87 userid then the data scan should not be done on the complete 1000 users but instead it will be done on server 1 from 1-100 users. This will increase the performance of database reads.Also indexes can also be created on sharded servers on an attribute.
+
+In sharding there are multiple replica sets on each servers.
+
+server1(primary node --secondary node)-----server2(primary node --secondary node)------server3(primary node --secondary node)
