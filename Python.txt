@@ -1652,3 +1652,85 @@ dict1={i:j for i,j in zip(l,lx) if (i>1 and i<5)}
 # set comprehension
 l = [1,1,1,11,1,1,1,1,1,1,2,4,3,3,3,3,33,3,4,4,4,4,4,4,7,7,7,7]
 p={i for i in l}
+
+
+Python collection data structures:
+----------------------------------
+
+#################### named tuple ####################
+
+from collections import namedtuple
+key=namedtuple('speed','car,bus') # defining the name of the tuple with its keys
+value=key('100','200') # assigning values to the keys (car,bus)
+value
+speed(car='100', bus='200')
+
+# using list as values of key to create named tuple 
+values=key._make(['300','400'])
+
+# accessing values with the key
+values.car
+values.bus
+
+
+##################### deque #########################
+
+from collections import deque
+l=['car','bus','train','ship']
+
+d = deque(l)
+
+d.appendleft('helicopter') # to append the value in the left side of list
+
+#deque(['helicopter', 'car', 'bus', 'train', 'ship']) 
+
+d.popleft() # to remove value from the left side of the list
+
+
+#################### counter #######################
+from collections import Counter
+
+l=['car','car','bus','bus',2,3,2,2,1]
+c=Counter(l)
+# Counter({'car': 2, 'bus': 2, 2: 3, 3: 1, 1: 1})
+c.most_common()
+#[(2, 3), ('car', 2), ('bus', 2), (3, 1), (1, 1)]
+list(c.elements())
+#['car', 'car', 'bus', 'bus', 2, 2, 2, 3, 1]
+sub={2:1,'car':1}
+c.subtract(sub)
+#Counter({'car': 1, 'bus': 2, 2: 2, 3: 1, 1: 1})
+
+
+##################### OrderedDict ##################
+from collections import OrderedDict
+
+d=OrderedDict()
+
+d['name']='shobhit'
+d['tech']='python'
+d['Org']='CGIXA'
+for k,v in d.items():
+	print(k,'----',v)
+
+'''
+name ---- shobhit
+tech ---- python
+Org ---- CGIXA
+'''
+
+# Ordered dicts remembers the order in which the elements are inserted in the dict.
+# This was a drawback till python 3.6 but corrected in python 3.7
+
+
+################## defaultdict #####################
+
+# This supplies the default value for the key which is not present in the dict, instead of throwing error
+
+dd=defaultdict(int)
+dd['name']='shobhit'
+dd['tech']='python'
+
+dd['org'] # instead of giving keyerror for this value it will return 0 which is a default value
+#output : 0
+
